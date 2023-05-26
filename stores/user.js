@@ -100,12 +100,14 @@ export const useUserStore = defineStore("user", {
 
 		async getProfile(name) {
 			let res = await $axios.get(`/api/users/${name}`);
-			const data = res.data[0];
-			this.$state.id = data.id;
-			this.$state.theme_id = data.theme_id;
-			this.$state.name = data.name;
-			this.$state.bio = data.bio;
-			this.$state.image = data.image;
+			const user = res.data.user;
+
+			this.$state.id = user.id;
+			this.$state.theme_id = user.theme_id;
+			this.$state.name = user.name;
+			this.$state.bio = user.bio;
+			this.$state.image = user.image;
+			this.$state.allLinks = res.data.links;
 
 			this.getUserTheme();
 		},

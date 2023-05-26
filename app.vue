@@ -15,9 +15,7 @@
 <script setup>
 	import { useUserStore } from "~~/stores/user";
 	import { storeToRefs } from "pinia";
-	import _axios from "~~/plugins/axios";
 
-	const axios = _axios().provide.axios;
 	const userStore = useUserStore();
 	const { isMobile, isPreviewOverlay, updatedLinkId, addLinkOverlay, id } =
 		storeToRefs(userStore);
@@ -41,8 +39,6 @@
 		addLinkOverlay.value = false;
 		isPreviewOverlay.value = false;
 		isMobile.value = false;
-
-		const response = await axios.get("api/test");
 
 		await userStore.getTokens();
 
