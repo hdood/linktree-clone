@@ -29,6 +29,6 @@
     "vue-country-code": "^1.1.3"
   },
   "engines": {
-    "node": "20.x"
+    "node": "18.x"
   }
 }
