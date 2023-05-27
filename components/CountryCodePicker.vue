@@ -93,7 +93,8 @@
 		ComboboxOption,
 	} from "@headlessui/vue";
 
-	const selected = ref("");
+	const props = defineProps(["value"]);
+	const selected = ref(props.value);
 	const query = ref("");
 	const emits = defineEmits(["update:modelValue"]);
 

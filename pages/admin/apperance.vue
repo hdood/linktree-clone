@@ -144,6 +144,9 @@
 										"
 									/>
 								</div>
+								<div>
+									{{ fullPhoneNumber }}
+								</div>
 								<div
 									class="flex gap-3 items-center"
 									v-if="phone"
