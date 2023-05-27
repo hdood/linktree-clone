@@ -1,0 +1,1 @@
+import{X as a,k as i,Y as t}from"./entry.6d44186c.js";const d=a((e,s)=>{const r=i();if(e.fullPath==="/"&&r.id)return t("/admin");if(e.fullPath==="/register"&&r.id)return t("/admin")});export{d as default};
