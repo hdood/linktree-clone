@@ -3,13 +3,14 @@
 		:class="[userStore.theme?.color]"
 		class="w-full h-full flex flex-col items-center min-h-screen"
 	>
-		<div class="mt-20">
+		<div class="mt-10">
 			<img
-				:src="imageUrl(userStore.image)"
+				:src="userStore.image"
 				alt=""
 				class="h-32 w-32 rounded-full"
 			/>
 		</div>
+
 		<div
 			:class="[userStore.theme?.text]"
 			class="font-medium text-2xl mt-6"
@@ -24,6 +25,96 @@
 			{{ userStore.bio }}
 		</div>
 
+		<div v-if="userStore.$state.portfolio">
+			<button
+				@click="userStore.downloadPortfolio"
+				class="flex items-center justify-center w-52 mt-6 py-1 rounded-full font-semibold mb-2"
+				:class="[
+					userStore.theme.button.text,
+					userStore.theme.button.color,
+				]"
+			>
+				Download Portfolio
+			</button>
+		</div>
+
+		<div class="flex gap-4 mx-auto w-36 mt-4 justify-center">
+			<a
+				class="flex items-center rounded-full p-2 cursor-pointer"
+				:class="[
+					userStore.theme.button.color,
+					userStore.theme.button.text,
+				]"
+				:href="userStore.$state.website"
+				target="_blank"
+				v-if="userStore.$state.website"
+			>
+				<Icon
+					name="icon-park-outline:earth"
+					size="30"
+				/>
+			</a>
+			<a
+				class="flex items-center rounded-full text-white cursor-pointer"
+				:class="[
+					userStore.theme.button.color,
+					userStore.theme.button.text,
+				]"
+				:href="`https://www.google.com/maps/search/?api=1&query=${userStore.$state.address}`"
+				target="_blank"
+				v-if="userStore.$state.address"
+			>
+				<Icon
+					name="logos:google-maps"
+					size="30"
+				/>
+			</a>
+		</div>
+		<div
+			class="mx-auto w-72 mt-4 flex flex-col gap-2"
+			:class="[userStore.theme.text]"
+		>
+			<div
+				class="flex items-center gap-6"
+				v-if="
+					userStore.$state.phone_visibility && userStore.$state.phone
+				"
+			>
+				<div
+					class="flex items-center rounded-full p-2"
+					:class="[
+						userStore.theme.button.color,
+						userStore.theme.button.text,
+					]"
+				>
+					<Icon
+						name="bi:phone-fill"
+						size="24"
+					/>
+				</div>
+				<div>
+					{{ userStore.$state.phone }}
+				</div>
+			</div>
+			<div class="flex items-center gap-6">
+				<div
+					class="flex items-center rounded-full p-2"
+					:class="[
+						userStore.theme.button.color,
+						userStore.theme.button.text,
+					]"
+				>
+					<Icon
+						name="ic:baseline-email"
+						size="24"
+					/>
+				</div>
+				<div>
+					{{ userStore.email }}
+				</div>
+			</div>
+		</div>
+
 		<div class="w-72 mt-5">
 			<a
 				v-for="link in userStore.allLinks"
@@ -33,7 +124,7 @@
 			>
 				<img
 					class="rounded-lg h-[30px] aspect-square"
-					:src="imageUrl(link.image)"
+					:src="link.image"
 				/>
 
 				<div class="absolute text-[20px] text-center w-full">
@@ -49,10 +140,6 @@
 	const userStore = useUserStore();
 
 	const route = useRoute();
-	const imageUrl = (link: string) => {
-		return "http://localhost:8000" + link;
-	};
-
 	onMounted(async () => {
 		await userStore.getProfile(route.params.name);
 	});

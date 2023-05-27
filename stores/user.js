@@ -11,6 +11,11 @@ export const useUserStore = defineStore("user", {
 		email: "",
 		image: "",
 		bio: "",
+		phone: "",
+		address: "",
+		website: "",
+		phone_visibility: true,
+		portfolio: "",
 		theme: null,
 		colors: null,
 		allLinks: null,
@@ -92,8 +97,14 @@ export const useUserStore = defineStore("user", {
 			this.$state.id = res.data.id;
 			this.$state.theme_id = res.data.theme_id;
 			this.$state.name = res.data.name;
+			this.$state.email = res.data.email;
 			this.$state.bio = res.data.bio;
 			this.$state.image = res.data.image;
+			this.$state.portfolio = res.data.portfolio;
+			this.$state.phone = res.data.phone;
+			this.$state.address = res.data.address;
+			this.$state.website = res.data.website;
+			this.$state.phone_visibility = res.data.phone_visibility;
 
 			this.getUserTheme();
 		},
@@ -107,9 +118,69 @@ export const useUserStore = defineStore("user", {
 			this.$state.name = user.name;
 			this.$state.bio = user.bio;
 			this.$state.image = user.image;
+			this.$state.portfolio = user.portfolio;
+			this.$state.email = user.email;
+			this.$state.phone = res.user.phone;
+			this.$state.address = res.user.address;
+			this.$state.website = res.user.website;
+			this.$state.phone_visibility = res.user.phone_visibility;
 			this.$state.allLinks = res.data.links;
 
 			this.getUserTheme();
+		},
+
+		async savePortfolio(portfolio) {
+			const data = new FormData();
+
+			data.append("portfolio", portfolio);
+			data.append("user_id", this.$state.id);
+
+			try {
+				await $axios.post("/api/user-portfolio", data);
+			} catch (error) {
+				console.error(error);
+			}
+		},
+
+		async downloadPortfolio() {
+			$axios({
+				url: "/api/download-portfolio",
+				method: "POST",
+				responseType: "blob",
+				data: {
+					user_id: this.$state.id,
+				},
+			})
+				.then(async (response) => {
+					const blob = new Blob([response.data], {
+						type: response.headers["content-type"],
+					});
+
+					console.log(response.headers["content-type"]);
+					const fileType =
+						response.headers["content-type"].split("/")[1];
+
+					const url = window.URL.createObjectURL(blob);
+
+					const link = document.createElement("a");
+					link.href = url;
+
+					link.setAttribute(
+						"download",
+						`${this.$state.name}.${fileType}`
+					);
+
+					document.body.appendChild(link);
+
+					link.click();
+					await this.getUser();
+
+					window.URL.revokeObjectURL(url);
+					document.body.removeChild(link);
+				})
+				.catch((error) => {
+					console.error("Error:", error);
+				});
 		},
 
 		async updateUserImage(data) {
@@ -132,10 +203,21 @@ export const useUserStore = defineStore("user", {
 			});
 		},
 
-		async updateUserDetails(name, bio) {
+		async updateUserDetails(
+			name,
+			bio,
+			phone,
+			phoneVisibility,
+			address,
+			website
+		) {
 			await $axios.patch(`/api/users/${this.$state.id}`, {
-				name: name,
-				bio: bio,
+				name,
+				bio,
+				phone: phone,
+				phone_visibility: phoneVisibility,
+				address,
+				website,
 			});
 		},
 
