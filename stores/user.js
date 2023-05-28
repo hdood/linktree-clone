@@ -12,6 +12,7 @@ export const useUserStore = defineStore("user", {
 		image: "",
 		bio: "",
 		phone: "",
+		countryCode: "",
 		address: "",
 		website: "",
 		phone_visibility: true,
@@ -102,6 +103,7 @@ export const useUserStore = defineStore("user", {
 			this.$state.image = res.data.image;
 			this.$state.portfolio = res.data.portfolio;
 			this.$state.phone = res.data.phone;
+			this.$state.countryCode = res.data.country_code;
 			this.$state.address = res.data.address;
 			this.$state.website = res.data.website;
 			this.$state.phone_visibility = res.data.phone_visibility;
@@ -120,10 +122,11 @@ export const useUserStore = defineStore("user", {
 			this.$state.image = user.image;
 			this.$state.portfolio = user.portfolio;
 			this.$state.email = user.email;
-			this.$state.phone = res.user.phone;
-			this.$state.address = res.user.address;
-			this.$state.website = res.user.website;
-			this.$state.phone_visibility = res.user.phone_visibility;
+			this.$state.phone = user.phone;
+			this.$state.add = user.add;
+			this.$state.website = user.website;
+			this.$state.countryCode = user.country_code;
+			this.$state.phone_visibility = user.phone_visibility;
 			this.$state.allLinks = res.data.links;
 
 			this.getUserTheme();
@@ -208,6 +211,7 @@ export const useUserStore = defineStore("user", {
 			bio,
 			phone,
 			phoneVisibility,
+			countryCode,
 			address,
 			website
 		) {
@@ -216,6 +220,7 @@ export const useUserStore = defineStore("user", {
 				bio,
 				phone: phone,
 				phone_visibility: phoneVisibility,
+				country_code: countryCode,
 				address,
 				website,
 			});

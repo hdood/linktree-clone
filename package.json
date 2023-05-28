@@ -25,6 +25,7 @@
     "js-file-downloader": "^1.1.25",
     "lodash": "^4.17.21",
     "pinia": "^2.0.33",
+    "qrcode": "^1.5.3",
     "vue-advanced-cropper": "^2.8.8",
     "vue-country-code": "^1.1.3"
   },

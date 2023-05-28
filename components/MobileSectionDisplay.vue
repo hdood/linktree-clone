@@ -104,7 +104,11 @@
 							<Icon name="bi:phone-fill" />
 						</div>
 						<div class="text-xs">
-							{{ userStore.$state.phone }}
+							{{
+								"+" +
+								userStore.$state.countryCode +
+								userStore.$state.phone
+							}}
 						</div>
 					</div>
 					<div

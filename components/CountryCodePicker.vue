@@ -6,7 +6,12 @@
 			>
 				<ComboboxInput
 					class="w-full border-none h-full py-3 pl-3 pr-10 text-sm text-gray-900 focus:outline-none focus:ring-0"
-					:displayValue="(person) => person.name"
+					:displayValue="
+						(country) =>
+							getFlagEmoji(getCountryByCode(country)?.code) +
+							' ' +
+							getCountryByCode(country)?.name
+					"
 					@change="query = $event.target.value"
 				/>
 				<ComboboxButton
@@ -37,7 +42,7 @@
 						v-for="country in filteredCountries"
 						as="template"
 						:key="country.name"
-						:value="country"
+						:value="country.value"
 						v-slot="{ selected, active }"
 					>
 						<li
@@ -94,13 +99,23 @@
 	} from "@headlessui/vue";
 
 	const props = defineProps(["value"]);
-	const selected = ref(props.value);
+	const selected = ref("");
 	const query = ref("");
 	const emits = defineEmits(["update:modelValue"]);
+	watch(selected, (value) => {
+		console.log(value.value);
+		emits("update:modelValue", value);
+	});
+	onMounted(() => {
+		selected.value = props.value;
+	});
 
-	watch(selected, (value) => emits("update:modelValue", value));
+	function getCountryByCode(code) {
+		return countries.find((country) => country.value == code);
+	}
 
 	function getFlagEmoji(countryCode) {
+		if (!countryCode) return "none";
 		const codePoints = countryCode
 			.toUpperCase()
 			.split("")

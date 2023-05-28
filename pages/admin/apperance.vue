@@ -129,7 +129,10 @@
 						<div class="w-full bg-white rounded-3xl p-6">
 							<div class="mt-4 flex items-center gap-7">
 								<div class="flex">
-									<CountryCodePicker v-model="countryCode" />
+									<CountryCodePicker
+										v-model="countryCode"
+										:value="initialCode"
+									/>
 									<TextInput
 										placeholder="Phone number"
 										v-model:input="phone"
@@ -143,9 +146,6 @@
 												: ''
 										"
 									/>
-								</div>
-								<div>
-									{{ fullPhoneNumber }}
 								</div>
 								<div
 									class="flex gap-3 items-center"
@@ -265,13 +265,9 @@
 <script setup>
 	import AdminLayout from "~~/layouts/AdminLayout.vue";
 	import { useUserStore } from "~~/stores/user";
-	import VueCountryCode from "vue-country-code";
-
 	const userStore = useUserStore();
 
 	definePageMeta({ middleware: "is-logged-out" });
-
-	console.log(VueCountryCode);
 
 	const name = ref("");
 	const phone = ref("");
@@ -286,10 +282,7 @@
 	const isBioFocused = ref(false);
 	const openCropper = ref(false);
 	const portfolioInput = ref(null);
-
-	const fullPhoneNumber = computed(() => {
-		return "+" + countryCode.value.value + phone.value;
-	});
+	let initialCode = userStore.$state.countryCode;
 
 	async function uploadPortfolio() {
 		const portfolio = portfolioInput.value.files[0];
@@ -308,6 +301,7 @@
 		phoneVisibility.value = userStore.$state.phone_visibility;
 		address.value = userStore.$state.address;
 		website.value = userStore.$state.website;
+		countryCode.value = userStore.$state.countryCode;
 	});
 
 	const updateTheme = async (themeId) => {
@@ -325,6 +319,7 @@
 				bio.value,
 				phone.value,
 				phoneVisibility.value,
+				countryCode.value,
 				address.value,
 				website.value
 			);
@@ -366,6 +361,10 @@
 	);
 	watch(
 		() => phone.value,
+		async () => await updateUserDetails()
+	);
+	watch(
+		() => countryCode.value,
 		async () => await updateUserDetails()
 	);
 	watch(

@@ -93,7 +93,12 @@
 					/>
 				</div>
 				<div>
-					{{ userStore.$state.phone }}
+					{{
+						"+" +
+						userStore.$state.countryCode +
+						" " +
+						userStore.$state.phone
+					}}
 				</div>
 			</div>
 			<div class="flex items-center gap-6">
@@ -132,12 +137,43 @@
 				</div>
 			</a>
 		</div>
+
+		<button
+			class="flex items-center justify-center w-52 mt-6 py-1 rounded-full font-semibold mb-2"
+			:class="[userStore.theme.button.text, userStore.theme.button.color]"
+			@click="
+				useMakeCard(
+					userStore.$state.name,
+					userStore.$state.email,
+					userStore.$state.phone,
+					userStore.$state.address
+				)
+			"
+		>
+			Save Contact
+		</button>
+
+		<button
+			class="flex items-center justify-center w-52 mt-6 py-1 rounded-full font-semibold mb-2"
+			:class="[userStore.theme.button.text, userStore.theme.button.color]"
+			@click="showQr = true"
+		>
+			See Qr Code
+		</button>
+
+		<QrModal
+			:show="showQr"
+			@close="showQr = false"
+		/>
 	</div>
 </template>
 
 <script setup lang="ts">
 	import { useUserStore } from "~~/stores/user";
 	const userStore = useUserStore();
+	import useMakeCard from "~~/composabales/makeCard";
+
+	const showQr = ref(false);
 
 	const route = useRoute();
 	onMounted(async () => {

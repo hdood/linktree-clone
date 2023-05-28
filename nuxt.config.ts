@@ -12,9 +12,6 @@ export default defineNuxtConfig({
 			autoprefixer: {},
 		},
 	},
-	vite: {
-		base: "/linktree-clone/",
-	},
 	modules: [
 		"nuxt-icon",
 		"nuxt-lodash",
