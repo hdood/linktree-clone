@@ -65,10 +65,9 @@
 		if (!el) return;
 		QRCode.toCanvas(
 			el,
-			`http://localhost:3000/${userStore.$state.name}`,
+			`http://www.95dot.com/${userStore.$state.name}`,
 			function (error) {
 				if (error) console.error(error);
-				console.log("success!");
 			}
 		);
 	}

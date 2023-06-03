@@ -1,6 +1,9 @@
 <template>
+	<Head>
+		<title>@{{ userStore.name }}</title>
+	</Head>
 	<div
-		:class="[userStore.theme?.color]"
+		:class="[userStore?.theme?.color]"
 		class="w-full h-full flex flex-col items-center min-h-screen"
 	>
 		<div class="mt-10">
@@ -10,7 +13,6 @@
 				class="h-32 w-32 rounded-full"
 			/>
 		</div>
-
 		<div
 			:class="[userStore.theme?.text]"
 			class="font-medium text-2xl mt-6"
@@ -30,8 +32,8 @@
 				@click="userStore.downloadPortfolio"
 				class="flex items-center justify-center w-52 mt-6 py-1 rounded-full font-semibold mb-2"
 				:class="[
-					userStore.theme.button.text,
-					userStore.theme.button.color,
+					userStore?.theme?.button.text,
+					userStore?.theme?.button.color,
 				]"
 			>
 				Download Portfolio
@@ -42,8 +44,8 @@
 			<a
 				class="flex items-center rounded-full p-2 cursor-pointer"
 				:class="[
-					userStore.theme.button.color,
-					userStore.theme.button.text,
+					userStore?.theme?.button.color,
+					userStore?.theme?.button.text,
 				]"
 				:href="userStore.$state.website"
 				target="_blank"
@@ -55,10 +57,10 @@
 				/>
 			</a>
 			<a
-				class="flex items-center rounded-full text-white cursor-pointer"
+				class="flex items-center rounded-full p-2 cursor-pointer"
 				:class="[
-					userStore.theme.button.color,
-					userStore.theme.button.text,
+					userStore?.theme?.button.color,
+					userStore?.theme?.button.text,
 				]"
 				:href="`https://www.google.com/maps/search/?api=1&query=${userStore.$state.address}`"
 				target="_blank"
@@ -69,22 +71,58 @@
 					size="30"
 				/>
 			</a>
+			<div
+				class="flex items-center rounded-full p-2 cursor-pointer"
+				:class="[
+					userStore?.theme?.button.color,
+					userStore?.theme?.button.text,
+				]"
+				@click="showQr = true"
+			>
+				<Icon
+					name="gg:qr"
+					size="30"
+				/>
+			</div>
+			<div
+				class="flex items-center rounded-full p-2 cursor-pointer"
+				:class="[
+					userStore?.theme?.button.color,
+					userStore?.theme?.button.text,
+				]"
+				@click="
+					useMakeCard(
+						userStore.$state.name,
+						userStore.$state.email,
+						userStore.$state.phone,
+						userStore.$state.address
+					)
+				"
+			>
+				<Icon
+					name="material-symbols:download"
+					size="30"
+				/>
+			</div>
 		</div>
 		<div
 			class="mx-auto w-72 mt-4 flex flex-col gap-2"
-			:class="[userStore.theme.text]"
+			:class="[userStore.theme?.text]"
 		>
-			<div
+			<a
 				class="flex items-center gap-6"
 				v-if="
 					userStore.$state.phone_visibility && userStore.$state.phone
 				"
+				:href="`tel:+${
+					userStore.$state.countryCode + userStore.$state.phone
+				}`"
 			>
 				<div
 					class="flex items-center rounded-full p-2"
 					:class="[
-						userStore.theme.button.color,
-						userStore.theme.button.text,
+						userStore?.theme?.button.color,
+						userStore?.theme?.button.text,
 					]"
 				>
 					<Icon
@@ -100,13 +138,16 @@
 						userStore.$state.phone
 					}}
 				</div>
-			</div>
-			<div class="flex items-center gap-6">
+			</a>
+			<a
+				:href="`mailto:${userStore.email}`"
+				class="flex items-center gap-6"
+			>
 				<div
 					class="flex items-center rounded-full p-2"
 					:class="[
-						userStore.theme.button.color,
-						userStore.theme.button.text,
+						userStore?.theme?.button.color,
+						userStore?.theme?.button.text,
 					]"
 				>
 					<Icon
@@ -117,49 +158,22 @@
 				<div>
 					{{ userStore.email }}
 				</div>
-			</div>
+			</a>
 		</div>
 
-		<div class="w-72 mt-5">
+		<div class="flex gap-5 mt-5">
 			<a
 				v-for="link in userStore.allLinks"
 				:href="link.url"
 				target="_blank"
-				class="flex items-center relative border w-[calc(100%-10px)] mx-auto bg-white mt-4 p-1 rounded-lg"
+				class="flex items-center relative border min-w-fit mx-auto bg-white mt-4 p-1 rounded-lg"
 			>
 				<img
 					class="rounded-lg h-[30px] aspect-square"
-					:src="link.image"
+					:src="'https://api.95dot.com' + link.image"
 				/>
-
-				<div class="absolute text-[20px] text-center w-full">
-					{{ link.name }}
-				</div>
 			</a>
 		</div>
-
-		<button
-			class="flex items-center justify-center w-52 mt-6 py-1 rounded-full font-semibold mb-2"
-			:class="[userStore.theme.button.text, userStore.theme.button.color]"
-			@click="
-				useMakeCard(
-					userStore.$state.name,
-					userStore.$state.email,
-					userStore.$state.phone,
-					userStore.$state.address
-				)
-			"
-		>
-			Save Contact
-		</button>
-
-		<button
-			class="flex items-center justify-center w-52 mt-6 py-1 rounded-full font-semibold mb-2"
-			:class="[userStore.theme.button.text, userStore.theme.button.color]"
-			@click="showQr = true"
-		>
-			See Qr Code
-		</button>
 
 		<QrModal
 			:show="showQr"

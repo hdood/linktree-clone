@@ -54,10 +54,7 @@
 					</button>
 				</div>
 
-				<div
-					class="flex gap-4 mx-auto w-36 mt-4 justify-center"
-					v-if="userStore.$state.website || userStore.$state.address"
-				>
+				<div class="flex gap-4 mx-auto w-36 mt-4 justify-center">
 					<a
 						class="flex items-center rounded-full p-1 cursor-pointer"
 						:class="[
@@ -80,8 +77,34 @@
 						v-if="userStore.$state.address"
 						target="_blank"
 					>
-						<Icon name="ion:home-sharp" />
+						<Icon name="logos:google-maps" />
 					</a>
+					<div
+						class="flex items-center rounded-full p-1 cursor-pointer"
+						:class="[
+							userStore.theme.button.color,
+							userStore.theme.button.text,
+						]"
+					>
+						<Icon name="gg:qr" />
+					</div>
+					<div
+						class="flex items-center rounded-full p-1 cursor-pointer"
+						:class="[
+							userStore.theme.button.color,
+							userStore.theme.button.text,
+						]"
+						@click="
+							useMakeCard(
+								userStore.$state.name,
+								userStore.$state.email,
+								userStore.$state.phone,
+								userStore.$state.address
+							)
+						"
+					>
+						<Icon name="material-symbols:download" />
+					</div>
 				</div>
 				<div
 					class="mx-auto w-36 mt-4 text-xs flex flex-col gap-2"
@@ -129,26 +152,17 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="flex flex-col gap-3 mt-4">
+				<div class="flex gap-2 mt-5">
 					<a
+						v-for="link in userStore.allLinks"
 						:href="link.url"
 						target="_blank"
-						class="flex items-center relative w-[calc(100%-10px)] mx-auto border bg-white p-1 rounded-xl"
-						v-for="link in userStore.allLinks"
+						class="flex items-center relative border min-w-fit mx-auto bg-white mt-4 p-1 rounded-lg"
 					>
 						<img
 							class="rounded-lg h-[30px] aspect-square"
 							:src="link.image"
 						/>
-
-						<div class="absolute w-full">
-							<div
-								class="max-w-[70%] w-full mx-auto text-[10px] text-center"
-							>
-								{{ link.name }}
-							</div>
-						</div>
 					</a>
 				</div>
 
@@ -160,5 +174,6 @@
 
 <script setup>
 	import { useUserStore } from "~~/stores/user";
+	import useMakeCard from "~~/composabales/makeCard";
 	const userStore = useUserStore();
 </script>

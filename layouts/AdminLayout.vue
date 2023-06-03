@@ -400,9 +400,8 @@
 	async function copyLink() {
 		try {
 			await navigator.clipboard.writeText(
-				`localhost:3000/${userStore.name}`
+				`https://www.95dot.com/${userStore.name}`
 			);
-			console.log("Content copied to clipboard");
 		} catch (err) {
 			console.error("Failed to copy: ", err);
 		}

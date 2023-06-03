@@ -115,6 +115,8 @@ export const useUserStore = defineStore("user", {
 			let res = await $axios.get(`/api/users/${name}`);
 			const user = res.data.user;
 
+			if (!user) return;
+
 			this.$state.id = user.id;
 			this.$state.theme_id = user.theme_id;
 			this.$state.name = user.name;
@@ -146,44 +148,43 @@ export const useUserStore = defineStore("user", {
 		},
 
 		async downloadPortfolio() {
-			$axios({
-				url: "/api/download-portfolio",
-				method: "POST",
-				responseType: "blob",
-				data: {
-					user_id: this.$state.id,
-				},
-			})
-				.then(async (response) => {
-					const blob = new Blob([response.data], {
-						type: response.headers["content-type"],
-					});
-
-					console.log(response.headers["content-type"]);
-					const fileType =
-						response.headers["content-type"].split("/")[1];
-
-					const url = window.URL.createObjectURL(blob);
-
-					const link = document.createElement("a");
-					link.href = url;
-
-					link.setAttribute(
-						"download",
-						`${this.$state.name}.${fileType}`
-					);
-
-					document.body.appendChild(link);
-
-					link.click();
-					await this.getUser();
-
-					window.URL.revokeObjectURL(url);
-					document.body.removeChild(link);
-				})
-				.catch((error) => {
-					console.error("Error:", error);
+			try {
+				const response = await $axios({
+					url: "/api/download-portfolio",
+					method: "POST",
+					responseType: "blob",
+					data: {
+						user_id: this.$state.id,
+					},
 				});
+				const blob = new Blob([response.data], {
+					type: response.headers["content-type"],
+				});
+
+				const fileType = response.headers["content-type"].split("/")[1];
+
+				const url = window.URL.createObjectURL(blob);
+
+				const link = document.createElement("a");
+				link.href = url;
+
+				link.setAttribute(
+					"download",
+					`${this.$state.name}.${fileType}`
+				);
+
+				document.body.appendChild(link);
+
+				link.click();
+
+				window.URL.revokeObjectURL(url);
+				document.body.removeChild(link);
+			} catch (error) {
+				console.log("error", error);
+				await this.getUser();
+			}
+
+			await this.getUser();
 		},
 
 		async updateUserImage(data) {

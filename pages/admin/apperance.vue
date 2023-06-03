@@ -1,4 +1,7 @@
 <template>
+	<Head>
+		<title>Appearance</title>
+	</Head>
 	<AdminLayout>
 		<div
 			id="ApperancePage"
@@ -86,12 +89,19 @@
 										@click="choosePortfolio"
 										class="flex items-center justify-center w-40 py-3 rounded-full text-white font-semibold bg-[#8228D9] hover:bg-[#6c21b3] mb-2"
 									>
-										{{
-											userStore.$state.portfolio
-												? "Update"
-												: "Upload"
-										}}
-										Portfolio
+										<Icon
+											v-if="uploading"
+											name="eos-icons:loading"
+											size="25"
+										/>
+										<span v-else>
+											{{
+												userStore.$state.portfolio
+													? "Update"
+													: "Upload"
+											}}
+											Portfolio
+										</span>
 									</button>
 									<div
 										class="cursor-pointer"
@@ -282,12 +292,16 @@
 	const isBioFocused = ref(false);
 	const openCropper = ref(false);
 	const portfolioInput = ref(null);
+	const uploading = ref(false);
 	let initialCode = userStore.$state.countryCode;
 
 	async function uploadPortfolio() {
+		uploading.value = true;
 		const portfolio = portfolioInput.value.files[0];
 
 		await userStore.savePortfolio(portfolio);
+		uploading.value = false;
+		await userStore.getUser();
 	}
 
 	function choosePortfolio() {

@@ -14,7 +14,7 @@ ${makeVCardTel(phone)}
 ${makeVCardAdr(address)}
 ${makeVCardTimeStamp()}
 END:VCARD`;
-	downloadToFile(vcard, "vcard.vcf", "text/vcard");
+	downloadToFile(vcard, name + ".vcf", "text/vcard");
 };
 
 function downloadToFile(

@@ -16,12 +16,9 @@
 	import { useUserStore } from "~~/stores/user";
 	import { storeToRefs } from "pinia";
 
-	console.log("updated");
-
 	const userStore = useUserStore();
 	const { isMobile, isPreviewOverlay, updatedLinkId, addLinkOverlay, id } =
 		storeToRefs(userStore);
-
 	const route = useRoute();
 	let show = ref(false);
 	let bgIsGray = ref(false);
