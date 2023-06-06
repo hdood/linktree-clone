@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import axios from "~~/plugins/axios";
-
 const $axios = axios().provide.axios;
 
 export const useUserStore = defineStore("user", {
@@ -24,6 +23,7 @@ export const useUserStore = defineStore("user", {
 		updatedLinkId: 0,
 		addLinkOverlay: false,
 		isPreviewOverlay: false,
+		errors: {},
 	}),
 	actions: {
 		hidePageOverflow(val, id) {
@@ -207,7 +207,7 @@ export const useUserStore = defineStore("user", {
 			});
 		},
 
-		async updateUserDetails(
+		updateUserDetails: async (
 			name,
 			bio,
 			phone,
@@ -215,7 +215,7 @@ export const useUserStore = defineStore("user", {
 			countryCode,
 			address,
 			website
-		) {
+		) => {
 			await $axios.patch(`/api/users/${this.$state.id}`, {
 				name,
 				bio,

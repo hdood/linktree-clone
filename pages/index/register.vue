@@ -82,6 +82,7 @@
 
 <script setup>
 	import AuthLayout from "~/layouts/AuthLayout.vue";
+	import { MultiStepForm } from "~/headless/main";
 
 	import { useUserStore } from "~~/stores/user";
 	const userStore = useUserStore();
