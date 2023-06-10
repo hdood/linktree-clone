@@ -1,45 +1,32 @@
 <template>
 	<div class="w-full">
-		<div class="mx-auto pb-24">
-			<Button
-				v-if="userStore.isMobile || !showAddLink"
-				type="primary"
-				class="block w-full h-10"
-				@click="showAddLinkFunc()"
-			>
-				<Icon
-					name="mdi:plus"
-					class="mr-0.5 hidden lg:inline md:inline"
-					size="25"
-				/>
-				<span>Add link</span>
-			</Button>
-
-			<AddLink
-				v-if="!userStore.isMobile"
-				@close="showAddLink = false"
-				:class="[
-					{
-						'mt-20 md:mt-8 mb-12 max-h-[1000px] transition-all duration-300 ease-in':
-							showAddLink,
-					},
-					{
-						'max-h-0 transition-all duration-300 ease-out':
-							!showAddLink,
-					},
-				]"
-			/>
-
+		<div class="mx-auto pb-24 py-3">
 			<div
-				v-for="link in userStore.allLinks"
-				class="mt-4"
+				class="text-gray-500 flex justify-between px-3 w-full flex-wrap"
 			>
+				<div class="flex items-center gap-5 flex-wrap">
+					<LinksCombobox
+						v-model="link"
+						placeholder="URL"
+					/>
+					<TextInput
+						class="w-[20rem]"
+						v-model:input="url"
+						placeholder="URL"
+					/>
+				</div>
+				<Button
+					type="success"
+					class="px-2 w-20 h-10"
+					@click="addLink"
+				>
+					Add
+				</Button>
+			</div>
+			<div class="mt-4 mx-2">Links:</div>
+			<div v-for="link in userStore.allLinks">
 				<LinkBox
-					v-if="link"
 					:link="link"
-					:selectedId="selectedInput.id"
-					:selectedStr="selectedInput.str"
-					@updatedInput="updatedInput"
 					class="mt-6"
 				/>
 			</div>
@@ -51,22 +38,27 @@
 	import { useUserStore } from "~~/stores/user";
 	const userStore = useUserStore();
 
-	definePageMeta({ middleware: "is-logged-out" });
-
 	const selectedInput = ref({ id: 0, str: "" });
-	const showAddLink = ref(false);
+
+	const link = ref({ name: "Platform", icon: "" });
+	const url = ref("");
+
+	async function addLink() {
+		try {
+			const response = await userStore.addLink(
+				link.value.name,
+				url.value,
+				link.value.icon
+			);
+			await userStore.getAllLinks();
+		} catch (error) {
+			console.log("error happened");
+		}
+	}
 
 	const updatedInput = (e: any) => {
 		selectedInput.value.id = e.id;
 		selectedInput.value.str = e.str;
-	};
-
-	const showAddLinkFunc = () => {
-		if (userStore.isMobile) {
-			userStore.addLinkOverlay = true;
-		} else {
-			showAddLink.value = true;
-		}
 	};
 </script>
 

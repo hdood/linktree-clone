@@ -1,9 +1,5 @@
 <template>
 	<!-- <VitePwaManifest /> -->
-	<div
-		v-if="bgIsGray"
-		class="bg-[#F3F3F1] fixed w-full h-full z-[-1]"
-	/>
 
 	<NuxtPage v-if="show" />
 
@@ -21,7 +17,6 @@
 		storeToRefs(userStore);
 	const route = useRoute();
 	let show = ref(false);
-	let bgIsGray = ref(false);
 
 	watch(
 		() => id.value,
@@ -50,8 +45,6 @@
 		} catch (error) {
 			console.log(error);
 		}
-
-		checkPath(route.fullPath);
 
 		if ("ontouchstart" in window) {
 			isMobile.value = true;
@@ -144,35 +137,6 @@
 			},
 		];
 	};
-
-	const checkPath = (path) => {
-		if (path == "/" || path == "/register") {
-			bgIsGray.value = false;
-			return;
-		}
-		bgIsGray.value = true;
-	};
-
-	watch(
-		() => route.fullPath,
-		(path) => checkPath(path)
-	);
-
-	watch(
-		() => isPreviewOverlay.value,
-		(val) => {
-			let id = null;
-			if (route.fullPath == "/admin") {
-				id = "AdminPage";
-			} else if (route.fullPath == "/admin/apperance") {
-				id = "ApperancePage";
-			} else if (route.fullPath == "/admin/settings") {
-				id = "SettingsPage";
-			}
-
-			userStore.hidePageOverflow(val, id);
-		}
-	);
 </script>
 <style>
 	* {

@@ -1,6 +1,6 @@
 <template>
 	<div id="ProfileSection">
-		<div class="w-full bg-white rounded-3xl p-6">
+		<div class="w-full rounded-3xl p-6">
 			<div class="flex items-center gap-3">
 				<div class="basis-11/12">
 					<div v-if="editing">
@@ -177,6 +177,10 @@
 
 			await userStore.getUser();
 			name.value = userStore.$state.name;
+			if (userStore.$state.frame) {
+				console.log("refreshed");
+				userStore.$state.frame.contentWindow.location.reload();
+			}
 		} catch (error: any) {
 			errors.value = error.response.data.errors;
 		}

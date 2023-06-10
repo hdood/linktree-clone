@@ -1,12 +1,11 @@
 <template>
 	<div id="ContactsSection">
-		<div class="max-w-sm bg-white rounded-3xl p-6">
+		<div class="max-w-sm rounded-3xl p-6">
 			<div class="mt-4 flex items-center gap-7">
-				<div class="flex flex-col md:flex-row lg:flex-row">
-					<CountryCodePicker
-						v-model="countryCode"
-						:value="initialCode"
-					/>
+				<div
+					class="flex flex-col md:flex-row md:gap-3 lg:gap-3 lg:flex-row"
+				>
+					<CountryCodePicker v-model="countryCode" />
 					<TextInput
 						placeholder="Phone number"
 						v-model:input="phone"
@@ -23,13 +22,14 @@
 				>
 					<div class="text-gray-600 text-sm">Visibility:</div>
 					<Switch
+						class="w-10"
 						:on="phoneVisibility"
 						@toggle="phoneVisibility = !phoneVisibility"
 					/>
 				</div>
 			</div>
 
-			<div class="mt-4">
+			<div class="mt-4 flex gap-3 items-center">
 				<TextInput
 					placeholder="Address"
 					v-model:input="address"
@@ -37,6 +37,16 @@
 					inputType="text"
 					:error="errors && errors.address ? errors.address[0] : ''"
 				/>
+				<a
+					:href="`https://www.google.com/maps/search/?api=1&query=${address}`"
+					target="_blank"
+				>
+					<Icon
+						class="bg-gray-200 p-1 rounded-lg"
+						name="logos:google-maps"
+						size="30"
+					/>
+				</a>
 			</div>
 			<div class="mt-4">
 				<TextInput
@@ -51,7 +61,7 @@
 	</div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 	import { useUserStore } from "~~/stores/user";
 	import axios from "~~/plugins/axios";
 
@@ -64,8 +74,7 @@
 	const website = ref("");
 	const phoneVisibility = ref(false);
 	const errors = ref({});
-	const countryCode = ref("");
-	let initialCode = userStore.$state.countryCode;
+	const countryCode = ref(91);
 
 	function syncState() {
 		phone.value = userStore.$state.phone;
@@ -87,7 +96,7 @@
 			});
 
 			await userStore.getUser();
-		} catch (error: any) {
+		} catch (error) {
 			errors.value = error.response.data.errors;
 		}
 	}, 1000);

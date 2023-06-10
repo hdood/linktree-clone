@@ -2,7 +2,7 @@
 	<Combobox v-model="selected">
 		<div class="relative w-40">
 			<div
-				class="relative rounded-bl-xl rounded-tl-xl w-full py-0.5 full cursor-default overflow-hidden bg-white text-left border-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
+				class="relative rounded-xl w-full full cursor-default border border-indigo-600 overflow-hidden bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
 			>
 				<ComboboxInput
 					class="w-full border-none h-full py-3 pl-3 pr-10 text-sm text-gray-900 focus:outline-none focus:ring-0"
@@ -98,16 +98,13 @@
 		ComboboxOption,
 	} from "@headlessui/vue";
 
-	const props = defineProps(["value"]);
-	const selected = ref("");
+	const props = defineProps(["modelValue"]);
+	const selected = ref(props.modelValue);
 	const query = ref("");
 	const emits = defineEmits(["update:modelValue"]);
 	watch(selected, (value) => {
 		console.log(value.value);
 		emits("update:modelValue", value);
-	});
-	onMounted(() => {
-		selected.value = props.value;
 	});
 
 	function getCountryByCode(code) {

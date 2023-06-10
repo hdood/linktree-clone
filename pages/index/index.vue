@@ -3,12 +3,15 @@
 		<title>Login</title>
 	</Head>
 
-	<div class="grid place-items-center h-screen p-3">
-		<div class="bg-white flex rounded-xl overflow-hidden">
+	<div class="grid place-items-center h-screen p-3 bg-gray-50">
+		<div>
+			<Logo class="w-20 h-20" />
+		</div>
+		<div class="bg-white flex rounded-xl shadow-md overflow-hidden">
 			<div class="hidden md:block lg:block border">
 				<img
 					src="~/assets/login-side.png"
-					class="lg:max-w-[35rem] md:max-w-[30rem]"
+					class="lg:max-w-[39rem] md:max-w-[30rem]"
 					alt=""
 				/>
 			</div>

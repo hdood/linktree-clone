@@ -1,7 +1,9 @@
 <template>
-	<div class="flex h-screen gap-2 fixed w-screen dark:bg-slate-800">
+	<div
+		class="flex h-screen gap-2 fixed w-screen dark:bg-slate-800 bg-gray-100"
+	>
 		<div
-			class="h-screen hidden md:block lg:block border w-24 hover:w-[12rem] [&:hover_.item]:inline [&:hover_.item-wrapper]:w-36 [&:hover_.item-wrapper]:transition-all duration-300 transition-all"
+			class="h-screen hidden md:block lg:block w-24 hover:w-[12rem] [&:hover_.item]:inline [&:hover_.item-wrapper]:w-36 [&:hover_.item-wrapper]:transition-all duration-300 transition-all"
 		>
 			<SideNavigation />
 		</div>
@@ -9,7 +11,7 @@
 			class="main pb-14 lg:pb-0 md:pb-0 flex-grow h-full flex flex-col items-center overflow-y-scroll overflow-x-hidden"
 		>
 			<div
-				class="mt-3 lg:flex justify-between md:flex bg-white lg:md:mb-6 mb-3 px-4 w-full py-2 rounded-lg"
+				class="mt-3 lg:flex justify-between md:flex lg:md:mb-6 mb-3 px-4 w-full py-2 rounded-lg"
 			>
 				<Search />
 				<Button
@@ -25,7 +27,7 @@
 					</div>
 				</Button>
 			</div>
-			<div class="w-full min-h-fit px-2">
+			<div class="w-full min-h-fit px-2 p-1">
 				<slot />
 			</div>
 		</div>

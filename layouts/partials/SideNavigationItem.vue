@@ -1,8 +1,8 @@
 <template>
 	<div
-		class="w-12 flex items-center item-wrapper duration-300"
+		class="w-12 flex items-center item-wrapper duration-300 justify-center"
 		:class="[
-			active && 'border-l-4 border-indigo-500 fill-white',
+			active && ' border-indigo-500 fill-white',
 			!active && 'fill-black/50 dark:text-slate-400',
 		]"
 	>
@@ -10,8 +10,8 @@
 			class="p-2 w-full rounded-lg flex items-center gap-3"
 			:class="[
 				active
-					? 'bg-gradient-to-r from-indigo-600 to-indigo-700 ml-3 md:ml-2  text-white font-medium justify-center dark:bg-indigo-500/30'
-					: 'justify-start ml-4 md:ml-3',
+					? 'bg-gradient-to-r from-indigo-600 to-indigo-700  text-white font-medium  dark:bg-indigo-500/30'
+					: '',
 			]"
 		>
 			<slot />

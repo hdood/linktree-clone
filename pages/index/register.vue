@@ -2,103 +2,138 @@
 	<Head>
 		<title>Register</title>
 	</Head>
-	<AuthLayout>
-		<div class="mt-10">
-			<h1 class="lg:text-5xl text-3xl text-center font-extrabold">
-				Create your account
-			</h1>
 
-			<form
-				class="mt-12"
-				@submit.prevent="register()"
+	<div class="grid place-items-center h-screen p-3 bg-gray-50">
+		<div>
+			<Logo class="w-20 h-20" />
+		</div>
+		<div class="bg-white flex rounded-xl shadow-md overflow-hidden">
+			<div class="hidden md:block lg:block border">
+				<img
+					src="~/assets/register-side.png"
+					class="lg:max-w-[39rem] md:max-w-[30rem]"
+					alt=""
+				/>
+			</div>
+			<div
+				class="flex flex-col items-center justify-center w-full gap-6 py-3 px-7 lg:min-w-fit lg:w-[30rem]"
 			>
-				<div>
-					<TextInput
-						placeholder="Username"
-						v-model:input="name"
-						inputType="text"
-						:error="errors && errors.name ? errors.name[0] : ''"
-					/>
-				</div>
-
-				<div class="mt-4">
-					<TextInput
-						placeholder="Email: link@gmail.com"
-						v-model:input="email"
-						inputType="email"
-						:error="errors && errors.email ? errors.email[0] : ''"
-					/>
-				</div>
-
-				<div class="mt-4">
-					<TextInput
-						placeholder="Password"
-						v-model:input="password"
-						inputType="password"
-						:error="
-							errors && errors.password ? errors.password[0] : ''
-						"
-					/>
-				</div>
-
-				<div class="mt-4">
-					<TextInput
-						placeholder="Confirm Password"
-						v-model:input="confirmPassword"
-						inputType="password"
-					/>
-				</div>
-
-				<div class="mt-10">
-					<button
-						type="submit"
-						class="rounded-full w-full p-3 font-bold"
-						:disabled="
-							!name || !email || !password || !confirmPassword
-						"
-						:class="
-							name && email && password && confirmPassword
-								? 'bg-[#8228D9] hover:bg-[#6c21b3] text-white'
-								: 'bg-[#EFF0EB] text-[#A7AAA2]'
-						"
+				<div class="space-y-3">
+					<div
+						class="text-2xl font-medium text-center text-indigo-600"
 					>
-						Create account
-					</button>
+						Register
+					</div>
 				</div>
-			</form>
+				<div class="space-y-4">
+					<TextInput
+						v-model:input="name"
+						placeholder="Name eg: Jhon_Doe"
+						:error="errors.name?.[0]"
+					/>
+					<TextInput
+						v-model:input="email"
+						placeholder="Email eg: test@test.com"
+						:error="errors?.email?.[0]"
+					/>
+					<TextInput
+						v-model:input="password"
+						placeholder="Password"
+						inputType="password"
+						:error="errors.password"
+					/>
+					<TextInput
+						v-model:input="confirmPassword"
+						placeholder="Confirm Password"
+						inputType="password"
+						:error="errors?.confirmPassword"
+					/>
+					<div class="flex self-start">
+						<div
+							class="flex items-center font-normal gap-2 justify-self-start text-sm"
+						>
+							<input
+								type="checkbox"
+								name=""
+								id=""
+							/>
+							Keep me signed in
+						</div>
+					</div>
+				</div>
 
-			<div class="text-[14px] text-center pt-12">
-				Already have an account?
-				<NuxtLink
-					to="/"
-					class="text-[#8228D9] underline"
+				<Button
+					:type="valid ? 'primary' : 'disabled'"
+					:loading="loading"
+					class="block w-60 h-10"
+					@click="register"
 				>
-					Log in
-				</NuxtLink>
+					Sign Up
+				</Button>
+
+				<div class="text-sm">
+					<RouterLink
+						to="/login"
+						class="underline text-indigo-600"
+						>Login</RouterLink
+					>
+				</div>
 			</div>
 		</div>
-	</AuthLayout>
+	</div>
 </template>
 
 <script setup>
-	import AuthLayout from "~/layouts/AuthLayout.vue";
-	import { MultiStepForm } from "~/headless/main";
-
 	import { useUserStore } from "~~/stores/user";
 	const userStore = useUserStore();
 
 	const router = useRouter();
 
 	definePageMeta({ middleware: "is-logged-in" });
+	const name = ref("");
+	const email = ref("");
+	const password = ref("");
+	const confirmPassword = ref("");
+	const errors = ref({});
+	const loading = ref(false);
 
-	let name = ref(null);
-	let email = ref(null);
-	let password = ref(null);
-	let confirmPassword = ref(null);
-	let errors = ref(null);
+	const valid = computed(() => {
+		errors.value = {};
+
+		if (
+			name.value == "" ||
+			email.value == "" ||
+			password.value == "" ||
+			confirmPassword.value == "" ||
+			password.value !== confirmPassword.value
+		) {
+			return false;
+		}
+
+		return true;
+	});
 
 	const register = async () => {
-		errors.value = null;
+		errors.value = {};
+		loading.value = true;
+
+		if (name.value.trim().includes(" ")) {
+			errors.value = {
+				name: ["Name must only contain letters and underscores"],
+			};
+
+			loading.value = false;
+
+			return false;
+		}
+
+		if (password.value !== confirmPassword.value) {
+			errors.value.confirmPassword =
+				"password confirmation does not match the password";
+			loading.value = false;
+
+			return false;
+		}
 
 		try {
 			await userStore.register(
@@ -113,5 +148,6 @@
 			console.log(error);
 			errors.value = error.response.data.errors;
 		}
+		loading.value = false;
 	};
 </script>

@@ -82,7 +82,6 @@
 									:stencil-props="{
 										movable: true,
 										resizable: true,
-										aspectRatio: 1,
 									}"
 									:resize-image="{
 										adjustStencil: false,

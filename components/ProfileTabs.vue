@@ -1,16 +1,16 @@
 <template>
 	<TabGroup
 		as="div"
-		class="flex flex-col"
+		class="flex flex-col min-h-[30rem] items-center"
 	>
 		<TabList
 			as="div"
 			class="gap-3 lg:gap-5 lg:mt-3 md:mt-3 max-w-fit flex justify-center rounded-xl bg-gray-300 p-1 flex-wrap self-center"
 		>
 			<Tab
-				v-for="tab in tabs"
 				as="div"
 				:key="tab.id"
+				v-for="tab in tabs"
 				class="focus:outline-none"
 				v-slot="{ selected }"
 			>
@@ -35,17 +35,25 @@
 			</Tab>
 		</TabList>
 
-		<TabPanels class="mt-2 min-h-[100%] basis-full">
-			<TabPanel
+		<TabPanels class="mt-2 min-h-[100%] basis-full lg:w-[45rem]">
+			<transition
 				v-for="tab in tabs"
 				:key="tab.id"
-				:class="[
-					'rounded-xl bg-white basis-full',
-					'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
-				]"
+				enter-active-class="transition-all duration-300"
+				enter-from-class="opacity-0 "
+				leave-active-class="transition-all duration-300 "
+				leave-to-class="opacity-0  "
+				mode="out-in"
 			>
-				<component :is="tab.component" />
-			</TabPanel>
+				<TabPanel
+					:class="[
+						'rounded-xl  basis-full',
+						'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+					]"
+				>
+					<component :is="tab.component" />
+				</TabPanel>
+			</transition>
 		</TabPanels>
 	</TabGroup>
 </template>
@@ -63,6 +71,7 @@
 	import ContactSectionVue from "./ContactSection.vue";
 	import ThemesSection from "./ThemesSection.vue";
 	import LinksSection from "./LinksSection.vue";
+	import MediaSection from "./MediaSection.vue";
 
 	const tabs = [
 		{
@@ -87,7 +96,7 @@
 			id: 5,
 			name: "Media",
 			icon: "material-symbols:media-link",
-			component: { template: "hello wrold" },
+			component: MediaSection,
 		},
 		{
 			id: 4,

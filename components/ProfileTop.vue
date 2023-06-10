@@ -1,25 +1,32 @@
 <template>
-	<div
-		class="bg-[url('~/assets/background_placeholder.jpeg')] bg-cover bg-no-repeat h-[20rem] mb-20 rounded-lg relative"
-	>
+	<div class="h-[20rem] mb-20 rounded-lg relative">
+		<img
+			:src="userStore.$state.coverImage"
+			alt=""
+			class="absolute top-0 left-0 w-full h-full rounded-lg hover:brightness-75 transition-all cursor-pointer"
+			@click="openCoverCropper = true"
+			srcset=""
+		/>
 		<div
-			class="absolute -bottom-16 left-6 outline rounded-2xl outline-white"
+			class="absolute -bottom-16 left-6 outline rounded-2xl outline-white cursor-pointer"
+			@click="openCropper = true"
 		>
 			<img
-				class="h-40 max-h-[10rem] rounded-2xl"
+				class="h-40 max-h-[10rem] rounded-2xl hover:brightness-50 transition-all"
 				:src="userStore.image"
 				alt=""
-			/>
-			<div
-				class="w-full bg-gray-800 h-full absolute top-0 opacity-0 hover:opacity-50 transition-opacity duration-300 cursor-pointer max-h-[10rem] rounded-2xl"
-				@click="openCropper = true"
 			/>
 		</div>
 
 		<CropperModal
 			v-if="openCropper"
-			@data="data = $event"
+			@data="image = $event"
 			@close="openCropper = false"
+		/>
+		<CropperModal
+			v-if="openCoverCropper"
+			@data="cover = $event"
+			@close="openCoverCropper = false"
 		/>
 	</div>
 </template>
@@ -29,23 +36,39 @@
 	const userStore = useUserStore();
 
 	const openCropper = ref(false);
-	const data = ref({});
+	const openCoverCropper = ref(false);
+	const image = ref({});
+	const cover = ref({});
 
 	const updateUserImage = async () => {
 		try {
-			await userStore.updateUserImage(data.value);
+			await userStore.updateUserImage(image.value);
 			await userStore.getUser();
 			setTimeout(() => (openCropper.value = false), 300);
 		} catch (error) {
 			openCropper.value = false;
 			alert(error);
-			console.log(error);
+		}
+	};
+	const updateUserCoverImage = async () => {
+		try {
+			await userStore.updateUserCoverImage(cover.value);
+			await userStore.getUser();
+			setTimeout(() => (openCoverCropper.value = false), 300);
+		} catch (error) {
+			openCoverCropper.value = false;
+			alert(error);
 		}
 	};
 
 	watch(
-		() => data.value,
+		() => image.value,
 		async () => await updateUserImage()
+	);
+
+	watch(
+		() => cover.value,
+		async () => await updateUserCoverImage()
 	);
 </script>
 

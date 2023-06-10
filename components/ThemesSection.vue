@@ -1,6 +1,6 @@
 <template>
 	<div id="ThemeSection">
-		<div class="w-full bg-white rounded-3xl p-6">
+		<div class="w-full rounded-3xl p-6">
 			<div
 				class="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-4"
 			>

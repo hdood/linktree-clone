@@ -2,13 +2,14 @@ import { defineStore } from "pinia";
 import axios from "~~/plugins/axios";
 const $axios = axios().provide.axios;
 
-export const useUserStore = defineStore("user", {
+export const useUserStore = defineStore("profile", {
 	state: () => ({
 		id: "",
 		theme_id: "",
 		name: "",
 		email: "",
 		image: "",
+		coverImage: "",
 		bio: "",
 		phone: "",
 		countryCode: "",
@@ -23,6 +24,7 @@ export const useUserStore = defineStore("user", {
 		updatedLinkId: 0,
 		addLinkOverlay: false,
 		isPreviewOverlay: false,
+		frame: null,
 		errors: {},
 	}),
 	actions: {
@@ -101,35 +103,13 @@ export const useUserStore = defineStore("user", {
 			this.$state.email = res.data.email;
 			this.$state.bio = res.data.bio;
 			this.$state.image = res.data.image;
+			this.$state.coverImage = res.data.cover_image;
 			this.$state.portfolio = res.data.portfolio;
 			this.$state.phone = res.data.phone;
 			this.$state.countryCode = res.data.country_code;
 			this.$state.address = res.data.address;
 			this.$state.website = res.data.website;
 			this.$state.phone_visibility = res.data.phone_visibility;
-
-			this.getUserTheme();
-		},
-
-		async getProfile(name) {
-			let res = await $axios.get(`/api/users/${name}`);
-			const user = res.data.user;
-
-			if (!user) return;
-
-			this.$state.id = user.id;
-			this.$state.theme_id = user.theme_id;
-			this.$state.name = user.name;
-			this.$state.bio = user.bio;
-			this.$state.image = user.image;
-			this.$state.portfolio = user.portfolio;
-			this.$state.email = user.email;
-			this.$state.phone = user.phone;
-			this.$state.add = user.add;
-			this.$state.website = user.website;
-			this.$state.countryCode = user.country_code;
-			this.$state.phone_visibility = user.phone_visibility;
-			this.$state.allLinks = res.data.links;
 
 			this.getUserTheme();
 		},
@@ -190,7 +170,9 @@ export const useUserStore = defineStore("user", {
 		async updateUserImage(data) {
 			await $axios.post("/api/user-image", data);
 		},
-
+		async updateUserCoverImage(data) {
+			await $axios.post("/api/user-cover-image", data);
+		},
 		async updateLinkImage(data) {
 			await $axios.post(`/api/link-image`, data);
 		},
@@ -240,10 +222,11 @@ export const useUserStore = defineStore("user", {
 			this.$state.allLinks = res.data;
 		},
 
-		async addLink(name, url) {
+		async addLink(name, url, icon) {
 			await $axios.post("/api/links", {
-				name: name,
-				url: url,
+				name,
+				url,
+				icon,
 			});
 		},
 

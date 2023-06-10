@@ -1,11 +1,14 @@
 <template>
 	<aside
-		class="flex flex-col h-[96%] items-center justify-between py-6 bg-white ml-4 my-2 rounded-xl"
+		class="flex flex-col h-[100%] items-center justify-between py-6 bg-white"
 	>
 		<div class="flex flex-col items-center space-y-20 w-full h-full">
-			<span class="dark:text-white font-semibold text-2xl"> Logo </span>
+			<span class="dark:text-white font-semibold text-2xl">
+				<Logo class="h-96 w-96" />
+				<!-- <img src="~/assets/logo2.jpg" class="h-14 w-14" alt=""> -->
+			</span>
 			<div class="space-y-8 flex flex-col justify-between w-full h-full">
-				<div class="flex flex-col gap-6">
+				<div class="flex flex-col items-center gap-6">
 					<routerLink to="/admin">
 						<SideNavigationItem active="admin">
 							<icon
@@ -57,16 +60,18 @@
 				</div>
 				<Button
 					type="danger"
-					class="min-w-[2.5rem] px-2 h-10 flex items-center justify-center self-center gap-2 space-x-2"
+					class="min-w-[2.5rem] px-2 h-10 self-center"
 					@click="deleteConfirm = true"
 				>
-					<icon
-						class="block"
-						name="oi:power-standby"
-					/>
-					<span class="dark:text-white item hidden transition-all"
-						>Logout</span
-					>
+					<div class="flex items-center justify-center gap-2">
+						<icon
+							class="block"
+							name="oi:power-standby"
+						/>
+						<span class="dark:text-white item hidden transition-all"
+							>Logout</span
+						>
+					</div>
 				</Button>
 			</div>
 
