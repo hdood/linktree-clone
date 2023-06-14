@@ -4,7 +4,7 @@
 	>
 		<div class="flex flex-col items-center space-y-20 w-full h-full">
 			<span class="dark:text-white font-semibold text-2xl">
-				<Logo class="h-96 w-96" />
+				<Logo />
 				<!-- <img src="~/assets/logo2.jpg" class="h-14 w-14" alt=""> -->
 			</span>
 			<div class="space-y-8 flex flex-col justify-between w-full h-full">
@@ -89,15 +89,15 @@
 </template>
 
 <script setup lang="ts">
-	import { useUserStore } from "~~/stores/user";
+	import { useAuthStore } from "~/stores/auth";
 	import SideNavigationItem from "./SideNavigationItem.vue";
-	const userStore = useUserStore();
+	const authStore = useAuthStore();
 
 	const deleteConfirm = ref(false);
 
 	async function logout() {
-		await userStore.logout();
-		useRouter().push("/login");
+		await authStore.logout();
+		useRouter().push("/");
 	}
 </script>
 

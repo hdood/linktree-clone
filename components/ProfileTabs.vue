@@ -35,7 +35,7 @@
 			</Tab>
 		</TabList>
 
-		<TabPanels class="mt-2 min-h-[100%] basis-full lg:w-[45rem]">
+		<TabPanels class="mt-2 min-h-[100%] basis-full lg:w-[45rem] p-2">
 			<transition
 				v-for="tab in tabs"
 				:key="tab.id"
@@ -45,12 +45,7 @@
 				leave-to-class="opacity-0  "
 				mode="out-in"
 			>
-				<TabPanel
-					:class="[
-						'rounded-xl  basis-full',
-						'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
-					]"
-				>
+				<TabPanel :class="['rounded-xl  basis-full', 'ring-white']">
 					<component :is="tab.component" />
 				</TabPanel>
 			</transition>

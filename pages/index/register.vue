@@ -78,15 +78,19 @@
 						>Login</RouterLink
 					>
 				</div>
+				<div id="buttonEl"></div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
+	import { googleProvider } from "~/services/googleProvider";
 	import { useUserStore } from "~~/stores/user";
-	const userStore = useUserStore();
-
+	import { useSocialStore } from "~~/stores/social";
+	import { useAuthStore } from "~/stores/auth";
+	const socialStore = useSocialStore();
+	const authStore = useAuthStore();
 	const router = useRouter();
 
 	definePageMeta({ middleware: "is-logged-in" });
@@ -96,6 +100,21 @@
 	const confirmPassword = ref("");
 	const errors = ref({});
 	const loading = ref(false);
+
+	onMounted(() => {
+		const renderButton = googleProvider.useRenderButton({
+			useOneTap: true,
+			element: document.getElementById("buttonEl"),
+			onError: () => console.error("Failed to render button"),
+			onSuccess: async (res) => {
+				if (await socialStore.googleRegister(res)) {
+					return useRouter().push("/admin");
+				}
+				return false;
+			},
+		});
+		renderButton();
+	});
 
 	const valid = computed(() => {
 		errors.value = {};
@@ -136,13 +155,12 @@
 		}
 
 		try {
-			await userStore.register(
+			await authStore.register(
 				name.value,
 				email.value,
 				password.value,
 				confirmPassword.value
 			);
-			await userStore.getUser();
 			router.push("/admin");
 		} catch (error) {
 			console.log(error);

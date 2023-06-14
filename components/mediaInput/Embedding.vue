@@ -21,8 +21,11 @@
 	import axios from "~~/plugins/axios";
 	import { useUserStore } from "~~/stores/user";
 	import { useMediaStore } from "~/stores/media";
+	import { storeToRefs } from "pinia";
 	const userStore = useUserStore();
 	const mediaStore = useMediaStore();
+
+	const { user } = storeToRefs(userStore);
 
 	const app = useNuxtApp();
 	const $axios = axios(app).provide.axios;
@@ -42,13 +45,14 @@
 
 		try {
 			await $axios.post("/api/media/embedded", {
-				user_id: userStore.$state.id,
+				user_id: user.value.id,
 				type: props.media?.name,
 				data: JSON.stringify({
 					url: url.value,
 				}),
 			});
-			await mediaStore.fetchMedia();
+			await mediaStore.fetchMedia(user.value.id);
+			userStore.refreshFrame();
 		} catch (error) {
 			console.log(error);
 		}

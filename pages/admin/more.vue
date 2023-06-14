@@ -3,18 +3,15 @@
 		<div
 			id="MorePage"
 			class="flex"
-			:class="userStore.isMobile ? 'pt-24' : 'pt-32'"
 		>
 			<div class="rounded-md bg-white w-full">
 				<button
 					@click="logout()"
 					class="w-full flex items-center text-gray-600 p-3 hover:text-black"
-					:class="userStore.isMobile ? 'text-[20px]' : 'text-[15px]'"
 				>
 					<Icon
 						name="circum:logout"
 						class="mr-6"
-						:size="userStore.isMobile ? '22' : '15'"
 					/>
 					Sign out
 				</button>

@@ -1,13 +1,12 @@
 import { useUserStore } from "~~/stores/user";
 
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware(async (to, from) => {
 	const userStore = useUserStore();
 
-	if (to.fullPath === "/" && userStore.id) {
+	try {
+		await userStore.getUser();
 		return navigateTo("/admin");
-	}
-
-	if (to.fullPath === "/register" && userStore.id) {
-		return navigateTo("/admin");
+	} catch (error) {
+		return true;
 	}
 });

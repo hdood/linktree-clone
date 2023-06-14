@@ -14,12 +14,12 @@
 			@change="uploadPortfolio"
 			class="hidden"
 		/>
-		<div class="flex items-center gap-4 max-w-fit">
+		<div class="flex items-center gap-4 w-full">
 			<Button
-				type="primary"
+				type="success"
 				@click="choosePortfolio"
 				:loading="uploading"
-				class="p-2 min-w-[2.5rem]"
+				class="p-2 w-full"
 			>
 				upload {{ props.media.name }}
 			</Button>
@@ -42,7 +42,12 @@
 <script setup>
 	import axios from "~~/plugins/axios";
 	import { useUserStore } from "~~/stores/user";
+	import { useMediaStore } from "~/stores/media";
+	import { storeToRefs } from "pinia";
 	const userStore = useUserStore();
+	const mediaStore = useMediaStore();
+
+	const { user } = storeToRefs(userStore);
 
 	const app = useNuxtApp();
 	const $axios = axios(app).provide.axios;
@@ -52,6 +57,13 @@
 	const errors = ref({ title: "" });
 
 	const props = defineProps(["media"]);
+	const onUploadProgress = (progressEvent) => {
+		const { loaded, total } = progressEvent;
+		let percent = Math.floor((loaded * 100) / total);
+		if (percent < 100) {
+			console.log(`${loaded} bytes of ${total} bytes. ${percent}%`);
+		}
+	};
 
 	async function uploadPortfolio() {
 		uploading.value = true;
@@ -67,12 +79,25 @@
 		const data = new FormData();
 
 		data.append("media", portfolio);
-		data.append("user_id", userStore.$state.id);
+		data.append("user_id", user.value.id);
 		data.append("data", JSON.stringify({}));
 		data.append("type", props.media.name);
 		data.append("title", title.value);
 
-		await $axios.post("/api/media/file", data);
+		try {
+			await $axios.post(
+				"/api/media/file",
+				data,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				},
+				onUploadProgress
+			);
+			mediaStore.fetchMedia(user.value.id);
+			userStore.refreshFrame();
+		} catch (error) {}
 
 		uploading.value = false;
 	}

@@ -1,5 +1,5 @@
 <template>
-	<AdminLayout :noSideBar="!userStore.isMobile">
+	<AdminLayout>
 		<NuxtPage />
 	</AdminLayout>
 </template>

@@ -64,8 +64,10 @@
 <script setup>
 	import { useUserStore } from "~~/stores/user";
 	import axios from "~~/plugins/axios";
-
+	import { storeToRefs } from "pinia";
 	const userStore = useUserStore();
+	const { user } = storeToRefs(userStore);
+
 	const app = useNuxtApp();
 	const $axios = axios(app).provide.axios;
 
@@ -77,17 +79,17 @@
 	const countryCode = ref(91);
 
 	function syncState() {
-		phone.value = userStore.$state.phone;
-		address.value = userStore.$state.address;
-		website.value = userStore.$state.website;
-		phoneVisibility.value = userStore.$state.phone_visibility;
-		countryCode.value = userStore.$state.countryCode;
+		phone.value = user.value.phone;
+		address.value = user.value.address;
+		website.value = user.value.website;
+		phoneVisibility.value = user.value.phone_visibility;
+		countryCode.value = user.value.countryCode;
 	}
 
 	const updateContactInfos = useDebounce(async () => {
 		errors.value = {};
 		try {
-			await $axios.patch(`/api/users/contact/${userStore.$state.id}`, {
+			await $axios.patch(`/api/users/contact/${user.value.id}`, {
 				phone: phone.value,
 				address: address.value,
 				website: website.value,
@@ -96,6 +98,7 @@
 			});
 
 			await userStore.getUser();
+			userStore.refreshFrame();
 		} catch (error) {
 			errors.value = error.response.data.errors;
 		}

@@ -1,6 +1,6 @@
 <template>
 	<Head>
-		<title>@{{ profileStore.name }}</title>
+		<title>@{{ user.name }}</title>
 	</Head>
 	<NuxtLink
 		class="fixed hidden lg:block bottom-1 left-1/2 -translate-x-1/2 bg-white p-2 rounded-lg"
@@ -9,14 +9,13 @@
 		Get your free card
 	</NuxtLink>
 	<div
-		:class="[profileStore?.theme?.color]"
 		class="w-full h-full flex flex-col items-center min-h-screen p-1 bg-white"
 	>
 		<div
 			class="lg:h-[14rem] lg:w-[50rem] mb-14 w-full h-40 rounded-lg relative"
 		>
 			<img
-				:src="profileStore.$state.coverImage"
+				:src="user.cover_image"
 				alt=""
 				class="absolute top-0 left-0 w-full h-full rounded-lg transition-all"
 				srcset=""
@@ -26,49 +25,24 @@
 			>
 				<img
 					class="lg:h-36 lg:w-36 w-28 rounded-2xl transition-all"
-					:src="profileStore.image"
+					:src="user.image"
 					alt=""
 				/>
 			</div>
 			<div></div>
 		</div>
-		<div
-			:class="[profileStore.theme?.text]"
-			class="font-medium text-2xl mt-6"
-		>
-			@{{ profileStore.name }}
-		</div>
+		<div class="font-medium text-2xl mt-6">@{{ user.name }}</div>
 
-		<div
-			:class="[profileStore.theme?.text]"
-			class="mt-4"
-		>
-			{{ profileStore.bio }}
-		</div>
-
-		<div v-if="profileStore.$state.portfolio">
-			<button
-				@click="profileStore.downloadPortfolio"
-				class="flex items-center justify-center w-52 mt-6 py-1 rounded-full font-semibold mb-2"
-				:class="[
-					profileStore?.theme?.button.text,
-					profileStore?.theme?.button.color,
-				]"
-			>
-				Download Portfolio
-			</button>
+		<div class="mt-4">
+			{{ user.bio }}
 		</div>
 
 		<div class="flex gap-4 mx-auto w-36 mt-4 justify-center">
 			<a
 				class="flex items-center rounded-full p-2 cursor-pointer"
-				:class="[
-					profileStore?.theme?.button.color,
-					profileStore?.theme?.button.text,
-				]"
-				:href="profileStore.$state.website"
+				:href="user.website"
 				target="_blank"
-				v-if="profileStore.$state.website"
+				v-if="user.website"
 			>
 				<Icon
 					name="icon-park-outline:earth"
@@ -77,13 +51,9 @@
 			</a>
 			<a
 				class="flex items-center rounded-full p-2 cursor-pointer"
-				:class="[
-					profileStore?.theme?.button.color,
-					profileStore?.theme?.button.text,
-				]"
-				:href="`https://www.google.com/maps/search/?api=1&query=${profileStore.$state.address}`"
+				:href="`https://www.google.com/maps/search/?api=1&query=${user.address}`"
 				target="_blank"
-				v-if="profileStore.$state.address"
+				v-if="user.address"
 			>
 				<Icon
 					name="logos:google-maps"
@@ -92,10 +62,6 @@
 			</a>
 			<div
 				class="flex items-center rounded-full p-2 cursor-pointer"
-				:class="[
-					profileStore?.theme?.button.color,
-					profileStore?.theme?.button.text,
-				]"
 				@click="showQr = true"
 			>
 				<Icon
@@ -105,17 +71,8 @@
 			</div>
 			<div
 				class="flex items-center rounded-full p-2 cursor-pointer"
-				:class="[
-					profileStore?.theme?.button.color,
-					profileStore?.theme?.button.text,
-				]"
 				@click="
-					useMakeCard(
-						profileStore.$state.name,
-						profileStore.$state.email,
-						profileStore.$state.phone,
-						profileStore.$state.address
-					)
+					useMakeCard(user.name, user.email, user.phone, user.address)
 				"
 			>
 				<Icon
@@ -124,66 +81,41 @@
 				/>
 			</div>
 		</div>
-		<div
-			class="mx-auto w-72 mt-4 flex flex-col gap-2"
-			:class="[profileStore.theme?.text]"
-		>
+		<div class="mx-auto w-72 mt-4 flex flex-col gap-2">
 			<a
 				class="flex items-center gap-6"
-				v-if="
-					profileStore.$state.phone_visibility &&
-					profileStore.$state.phone
-				"
-				:href="`tel:+${
-					profileStore.$state.countryCode + profileStore.$state.phone
-				}`"
+				v-if="user.phone_visibility && user.phone"
+				:href="`tel:+${user.countryCode + user.phone}`"
 			>
-				<div
-					class="flex items-center rounded-full p-2"
-					:class="[
-						profileStore?.theme?.button.color,
-						profileStore?.theme?.button.text,
-					]"
-				>
+				<div class="flex items-center rounded-full p-2">
 					<Icon
 						name="bi:phone-fill"
 						size="24"
 					/>
 				</div>
 				<div>
-					{{
-						"+" +
-						profileStore.$state.countryCode +
-						" " +
-						profileStore.$state.phone
-					}}
+					{{ "+" + user.countryCode + " " + user.phone }}
 				</div>
 			</a>
 			<a
-				:href="`mailto:${profileStore.email}`"
+				:href="`mailto:${user.email}`"
 				class="flex items-center gap-6"
 			>
-				<div
-					class="flex items-center rounded-full p-2"
-					:class="[
-						profileStore?.theme?.button.color,
-						profileStore?.theme?.button.text,
-					]"
-				>
+				<div class="flex items-center rounded-full p-2">
 					<Icon
 						name="ic:baseline-email"
 						size="24"
 					/>
 				</div>
 				<div>
-					{{ profileStore.email }}
+					{{ user.email }}
 				</div>
 			</a>
 		</div>
 
 		<div class="flex flex-wrap gap-y-1 gap-x-5 mt-5">
 			<a
-				v-for="link in profileStore.allLinks"
+				v-for="link in user.links"
 				:href="link.url"
 				target="_blank"
 				class="flex items-center flex-wrap relative border min-w-fit mx-auto bg-white mt-4 p-1 rounded-lg"
@@ -202,16 +134,19 @@
 	</div>
 </template>
 
-<script setup lang="ts">
-	import { useProfileStore } from "~/stores/profile";
-	const profileStore = useProfileStore();
-	import useMakeCard from "~~/composabales/makeCard";
+<script setup>
+	import { storeToRefs } from "pinia";
+	import { useProfileStore } from "~~/stores/profile";
+	import useMakeCard from "~~/composables/makeCard";
 
+	const profileStore = useProfileStore();
+
+	const { user } = storeToRefs(profileStore);
 	const showQr = ref(false);
 
 	const route = useRoute();
 	onMounted(async () => {
-		await profileStore.getProfile(route.params.name);
+		await profileStore.fetchProfile(route.params.name);
 	});
 </script>
 

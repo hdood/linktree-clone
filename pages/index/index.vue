@@ -69,18 +69,49 @@
 						>Create account</RouterLink
 					>
 				</div>
+
+				<div
+					id="buttonEL"
+					ref="buttonEl"
+				></div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
+	import { googleProvider } from "~/services/googleProvider";
 	import { useUserStore } from "~~/stores/user";
+	import { useSocialStore } from "~~/stores/social";
+	import { useAuthStore } from "~/stores/auth";
+	import { useLinksStore } from "~/stores/links";
+	definePageMeta({ middleware: "is-logged-in" });
 	const userStore = useUserStore();
+	const socialStore = useSocialStore();
+	const authStore = useAuthStore();
+	const linksStore = useLinksStore();
+
+	const buttonEl = ref(null);
+
+	onMounted(() => {
+		console.log(buttonEl.value.children);
+
+		const renderButton = googleProvider.useRenderButton({
+			useOneTap: true,
+			element: buttonEl.value,
+			onError: () => console.error("Failed to render button"),
+			onSuccess: async (res) => {
+				if (await socialStore.googleLogin(res)) {
+					return useRouter().push("/admin");
+				}
+				return false;
+			},
+		});
+
+		renderButton();
+	});
 
 	const router = useRouter();
-
-	definePageMeta({ middleware: "is-logged-in" });
 
 	const email = ref("");
 	const password = ref("");
@@ -96,10 +127,9 @@
 		errors.value = null;
 
 		try {
-			await userStore.getTokens();
-			await userStore.login(email.value, password.value);
+			await authStore.login(email.value, password.value);
 			await userStore.getUser();
-			await userStore.getAllLinks();
+			await linksStore.getAllLinks();
 
 			router.push("/admin");
 		} catch (error) {

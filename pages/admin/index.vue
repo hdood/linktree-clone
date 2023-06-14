@@ -13,5 +13,11 @@
 </template>
 
 <script setup>
+	import { useUserStore } from "~/stores/user";
 	definePageMeta({ middleware: "is-logged-out" });
+	const userStore = useUserStore();
+
+	onMounted(async () => {
+		await userStore.getUser();
+	});
 </script>

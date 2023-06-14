@@ -13,53 +13,85 @@
 						class="w-[20rem]"
 						v-model:input="url"
 						placeholder="URL"
+						:error="errors?.url?.[0]"
 					/>
 				</div>
 				<Button
 					type="success"
 					class="px-2 w-20 h-10"
 					@click="addLink"
+					:loading="loading"
 				>
 					Add
 				</Button>
 			</div>
 			<div class="mt-4 mx-2">Links:</div>
-			<div v-for="link in userStore.allLinks">
-				<LinkBox
-					:link="link"
-					class="mt-6"
-				/>
-			</div>
+
+			<draggable
+				v-model="linksStore.all"
+				:component-data="{ name: 'fade' }"
+				:item-key="'nothing'"
+				ghost-class="brightness-50"
+				@end="onEnd"
+			>
+				<template #item="{ element }">
+					<LinkBox
+						:link="element"
+						class="mt-3"
+					/>
+				</template>
+			</draggable>
 		</div>
 	</div>
 </template>
 
-<script setup lang="ts">
-	import { useUserStore } from "~~/stores/user";
+<script setup>
+	import { useLinksStore } from "~/stores/links";
+	import { useUserStore } from "~/stores/user";
+	import draggable from "vuedraggable";
+	const linksStore = useLinksStore();
 	const userStore = useUserStore();
-
-	const selectedInput = ref({ id: 0, str: "" });
 
 	const link = ref({ name: "Platform", icon: "" });
 	const url = ref("");
+	const loading = ref(false);
+	const errors = ref({});
 
-	async function addLink() {
-		try {
-			const response = await userStore.addLink(
-				link.value.name,
-				url.value,
-				link.value.icon
-			);
-			await userStore.getAllLinks();
-		} catch (error) {
-			console.log("error happened");
-		}
+	async function onEnd(evt) {
+		console.log("dropped");
+		await linksStore.reorder();
 	}
 
-	const updatedInput = (e: any) => {
-		selectedInput.value.id = e.id;
-		selectedInput.value.str = e.str;
-	};
+	async function addLink() {
+		errors.value = {};
+		if (url.value == "") {
+			errors.value = { url: ["please specify a url for this link"] };
+			return;
+		}
+
+		loading.value = true;
+
+		try {
+			const response = await linksStore.addLink(
+				link.value.name,
+				url.value,
+				link.value.icon,
+				linksStore.all.length
+			);
+
+			await linksStore.getAllLinks();
+
+			url.value = "";
+			userStore.refreshFrame();
+		} catch (error) {
+			errors.value = error.response.data.errors;
+		}
+		loading.value = false;
+	}
+
+	onMounted(() => {
+		linksStore.getAllLinks();
+	});
 </script>
 
 <style scoped></style>

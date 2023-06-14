@@ -1,7 +1,7 @@
 <template>
 	<div class="h-[20rem] mb-20 rounded-lg relative">
 		<img
-			:src="userStore.$state.coverImage"
+			:src="user.cover_image"
 			alt=""
 			class="absolute top-0 left-0 w-full h-full rounded-lg hover:brightness-75 transition-all cursor-pointer"
 			@click="openCoverCropper = true"
@@ -13,7 +13,7 @@
 		>
 			<img
 				class="h-40 max-h-[10rem] rounded-2xl hover:brightness-50 transition-all"
-				:src="userStore.image"
+				:src="user.image"
 				alt=""
 			/>
 		</div>
@@ -32,8 +32,10 @@
 </template>
 
 <script setup lang="ts">
+	import { storeToRefs } from "pinia";
 	import { useUserStore } from "~~/stores/user";
 	const userStore = useUserStore();
+	const { user } = storeToRefs(userStore);
 
 	const openCropper = ref(false);
 	const openCoverCropper = ref(false);

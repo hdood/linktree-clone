@@ -1,9 +1,9 @@
-import lodash from "lodash"
+import lodash from "lodash";
 
 export default defineNuxtPlugin((NuxtApp) => {
-    return {
-        provide: { 
-            $lodash: lodash,
-        },
-    }
-})
+	return {
+		provide: {
+			$lodash: lodash,
+		},
+	};
+});

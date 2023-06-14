@@ -1,11 +1,11 @@
 <template>
 	<div
-		v-if="userStore.theme"
-		class="md:block lg:flex hidden lg:w-[500px] w-[310px] h-[40rem] border items-center justify-center"
+		class="md:block lg:flex hidden lg:w-[500px] w-[310px] h-[40rem] items-center justify-center"
 	>
+		<!-- :src="`http://localhost:3000/${userStore.$state.name}`" -->
 		<iframe
-			:src="`http://localhost:3000/${userStore.$state.name}`"
-			class="rounded-lg overflow-hidden fixed top-24 h-[40rem] scale-75"
+			:src="`/${userStore.user.name}`"
+			class="rounded-lg overflow-hidden fixed top-14 h-[40rem] scale-75"
 			ref="frame"
 		></iframe>
 	</div>
@@ -13,7 +13,6 @@
 
 <script setup>
 	import { useUserStore } from "~~/stores/user";
-	import useMakeCard from "~~/composabales/makeCard";
 	const userStore = useUserStore();
 	const frame = ref(null);
 

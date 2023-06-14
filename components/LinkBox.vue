@@ -1,14 +1,21 @@
 <template>
-	<div class="w-full rounded-3xl px-2 flex flex-col">
+	<div class="w-full rounded-xl px-2 flex flex-col bg-white p-2 shadow">
 		<div class="flex items-center gap-3 justify-between">
-			<div class="space-x-4">
+			<div class="flex items-center gap-5">
 				<icon
-					size="40"
-					:name="link.icon"
+					name="mdi:drag"
+					size="35"
+					class="cursor-move"
 				/>
-				<span>
-					{{ link.url }}
-				</span>
+				<div class="space-x-4">
+					<icon
+						size="40"
+						:name="link.icon"
+					/>
+					<span>
+						{{ link.url }}
+					</span>
+				</div>
 			</div>
 
 			<Button
@@ -39,7 +46,9 @@
 
 <script setup>
 	import { useUserStore } from "~~/stores/user";
+	import { useLinksStore } from "~/stores/links";
 	const userStore = useUserStore();
+	const linksStore = useLinksStore();
 
 	const showDeleteModal = ref(false);
 
@@ -52,8 +61,9 @@
 
 	async function deleteLink() {
 		try {
-			await userStore.deleteLink(link.value.id);
-			await userStore.getAllLinks();
+			await linksStore.deleteLink(link.value.id);
+			await linksStore.getAllLinks();
+			userStore.refreshFrame();
 		} catch (error) {
 			console.log(error);
 		}

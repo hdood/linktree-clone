@@ -1,13 +1,18 @@
 <template>
-	<iframe
-		class="w-full"
-		height="315"
-		:src="`https://www.youtube.com/embed/${extractYouTubeVideoId}`"
-	>
-	</iframe>
+	<Media @delete="mediaStore.deleteMedia(props.media.id)">
+		<iframe
+			class="w-full"
+			height="315"
+			:src="`https://www.youtube.com/embed/${extractYouTubeVideoId}`"
+		>
+		</iframe>
+	</Media>
 </template>
 
 <script setup>
+	import { useMediaStore } from "~/stores/media";
+	const mediaStore = useMediaStore();
+
 	const props = defineProps(["media"]);
 	const data = JSON.parse(props.media.data);
 
@@ -20,6 +25,8 @@
 			return null;
 		}
 	});
+
+	function deleteVideo() {}
 </script>
 
 <style scoped></style>
