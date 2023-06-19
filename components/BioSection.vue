@@ -1,7 +1,7 @@
 <template>
 	<div id="ProfileSection">
 		<div class="w-full rounded-3xl p-6">
-			<div class="flex gap-3">
+			<div class="flex gap-3 items-baseline">
 				<div class="basis-11/12">
 					<div v-if="editing">
 						<TextInput
@@ -9,6 +9,7 @@
 							v-model:input="tempName"
 							:rounded="true"
 							inputType="text"
+							label="Name"
 							:max="25"
 							:error="
 								errors && errors?.name ? errors?.name[0] : ''
@@ -20,14 +21,26 @@
 							size="25"
 						/>
 					</div>
-					<span
-						class="text-xl font-medium"
+					<div
+						class="flex items-center gap-2 flex-wrap"
 						v-else
 					>
-						{{ tempName }}
-					</span>
+						<span class="text-xl font-medium">
+							{{ tempName }}
+						</span>
+						<div class="flex gap-3 items-center">
+							<Switch
+								class="w-10"
+								:on="user.profile_visibility == 'public'"
+								@toggle="userStore.toggleProfileVisibility()"
+							/>
+							<span class="text-sm">
+								{{ user.profile_visibility }}
+							</span>
+						</div>
+					</div>
 				</div>
-				<div>
+				<div class="flex items-center justify-center">
 					<Button
 						:type="name == '' ? 'disabled' : 'success'"
 						v-if="editing"
@@ -65,6 +78,7 @@
 					placeholder="Full Name"
 					v-model:input="fullName"
 					:rounded="true"
+					label="Full Name"
 					inputType="text"
 					:error="
 						errors && errors?.full_name ? errors?.full_name[0] : ''
@@ -78,6 +92,7 @@
 					placeholder="Designation"
 					v-model:input="designation"
 					:rounded="true"
+					label="Designation"
 					inputType="text"
 					:error="
 						errors && errors?.designation
@@ -87,14 +102,21 @@
 				/>
 			</div>
 
-			<textarea
-				v-model="bio"
-				rows="4"
-				maxlength="80"
-				placeholder="Bio"
-				:rounded="true"
-				class="w-full mt-4 bg-[#EFF0EB] text-gray-800 border-2 text-sm border-[#EFF0EB] focus:bg-gray-200 rounded-xl py-3.5 px-3 placeholder-gray-500 resize-none focus:outline-none"
-			></textarea>
+			<label
+				for="bio"
+				class="flex flex-col mt-5"
+			>
+				<span class="text-sm font-medium">Bio:</span>
+				<textarea
+					v-model="bio"
+					rows="4"
+					maxlength="80"
+					placeholder="Bio"
+					:rounded="true"
+					id="bio"
+					class="w-full bg-[#EFF0EB] text-gray-800 border-2 text-sm border-[#EFF0EB] focus:bg-gray-200 rounded-xl py-3.5 px-3 placeholder-gray-500 resize-none focus:outline-none"
+				></textarea>
+			</label>
 			<div
 				class="flex items-center justify-end text-[#676B5F] text-[13px]"
 			>
@@ -102,16 +124,14 @@
 			</div>
 
 			<div class="w-full">
-				<div class="flex items-center gap-4 max-w-fit">
-					<Button
-						type="primary"
-						@click="updateProfileInfos"
-						:loading="uploading"
-						class="p-2 min-w-[2.5rem]"
-					>
-						Save Bio
-					</Button>
-				</div>
+				<Button
+					type="primary"
+					@click="updateProfileInfos"
+					:loading="savingBioLoading"
+					class="p-2 w-44 block mx-auto"
+				>
+					Save Bio
+				</Button>
 			</div>
 		</div>
 	</div>
@@ -125,12 +145,12 @@
 	const userStore = useUserStore();
 	const { user } = storeToRefs(userStore);
 
-	const { notification } = useNotificationsStore();
+	const { successNotification } = useNotificationsStore();
 
 	const app = useNuxtApp();
 	const $axios = axios(app).provide.axios;
 
-	const uploading = ref(false);
+	const savingBioLoading = ref(false);
 
 	const loading = ref(false);
 
@@ -156,7 +176,7 @@
 		fullName.value = user.value.full_name;
 	}
 
-	const updateProfileInfos = useDebounce(async () => {
+	const updateProfileInfos = async () => {
 		errors.value = [];
 		// if the entered name is the same as the current name we don't have update it
 		if (tempName.value == name.value && editing.value) {
@@ -173,6 +193,7 @@
 		}
 		try {
 			loading.value = true;
+			savingBioLoading.value = true;
 			await $axios.patch(`/api/users/${user.value.id}`, {
 				name: tempName.value,
 				bio: bio.value,
@@ -182,15 +203,8 @@
 
 			await userStore.getUser();
 			name.value = user.value.name;
-			notification(
-				{
-					type: "success",
-					title: "success",
-					icon: "fluent:checkmark-12-filled",
-					content: "bio content updated successfully",
-				},
-				5000
-			);
+
+			successNotification("bio content updated successfully");
 
 			userStore.refreshFrame();
 			editing.value = false;
@@ -198,7 +212,8 @@
 			errors.value = error.response.data?.errors;
 		}
 		loading.value = false;
-	}, 1000);
+		savingBioLoading.value = false;
+	};
 
 	const bioLengthComputed = computed(() => {
 		return !bio.value ? 0 : bio.value.length;

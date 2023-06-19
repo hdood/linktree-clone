@@ -1,7 +1,10 @@
 <template>
-	<Media @delete="mediaStore.deleteMedia(props.media.id)">
+	<Media
+		@delete="mediaStore.deleteMedia(props.media.id)"
+		:media="props.media"
+	>
 		<iframe
-			:src="`https://www.facebook.com/plugins/post.php?href=${withoutTrailingSlash}&show_text=true&width=auto`"
+			:src="`https://www.facebook.com/plugins/post.php?href=${withoutTrailingSlash}&show_text=true&width=500`"
 			height="auto"
 			style="border: none; overflow: hidden"
 			scrolling="no"

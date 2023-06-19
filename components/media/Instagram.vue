@@ -1,10 +1,13 @@
 <template>
-	<Media @delete="mediaStore.deleteMedia(props.media.id)">
-		<div>
+	<Media
+		@delete="mediaStore.deleteMedia(props.media.id)"
+		:media="props.media"
+	>
+		<div class="w-full flex justify-center">
 			<iframe
 				:src="`${withoutTrailingSlash}/embed`"
-				width="300"
-				height="550"
+				class="w-full"
+				height="600"
 				style="border: none; overflow: hidden"
 				scrolling="no"
 				frameborder="0"

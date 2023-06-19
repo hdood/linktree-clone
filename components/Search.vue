@@ -1,5 +1,5 @@
 <template>
-	<div class="w-96 relative">
+	<div class="lg:w-96 mx-auto lg:mx-0 relative w-full">
 		<TextInput
 			placeholder="Search for a user"
 			v-model:input="term"
@@ -40,7 +40,7 @@
 	</div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 	import TextInput from "./TextInput.vue";
 	import axios from "~~/plugins/axios";
 
@@ -61,8 +61,8 @@
 				`/api/users/search/${term.value}`
 			);
 			users.value = response.data.data;
-		} catch (error: any) {
-			console.error("something wend w	rong", error);
+		} catch (error) {
+			console.error("something wend wrong", error);
 		}
 		loading.value = false;
 	}, 1000);

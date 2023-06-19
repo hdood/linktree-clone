@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useNotificationsStore } from "./notifications";
 import axios from "~~/plugins/axios";
 const $axios = axios().provide.axios;
 
@@ -7,6 +8,11 @@ class UserStore {
 	colors = ref(null);
 	frame = ref(null);
 	error = ref({});
+
+	constructor() {
+		const { errorNotification } = useNotificationsStore();
+		this.errorNotification = errorNotification;
+	}
 
 	getCSRFCookie = async () => await $axios.get("/sanctum/csrf-cookie");
 
@@ -95,6 +101,27 @@ class UserStore {
 			await $axios.post("/api/user-portfolio", data);
 		} catch (error) {
 			console.error(error);
+		}
+	};
+
+	toggleVisibility = async (field) => {
+		try {
+			const response = await $axios.patch(
+				`/api/users/visibility/${field}`
+			);
+			this.getUser();
+		} catch (error) {
+			this.errorNotification(`filed to toggle ${field} visibility`);
+		}
+	};
+	toggleProfileVisibility = async () => {
+		try {
+			const response = await $axios.patch(
+				`/api/users/profile-visibility`
+			);
+			this.getUser();
+		} catch (error) {
+			this.errorNotification(`filed to toggle profile visibility`);
 		}
 	};
 }

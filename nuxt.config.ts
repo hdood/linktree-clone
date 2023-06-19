@@ -1,3 +1,6 @@
+import path from "path";
+import fs from "fs";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	runtimeConfig: {
@@ -21,6 +24,13 @@ export default defineNuxtConfig({
 			autoprefixer: {},
 		},
 	},
+
+	// devServer: {
+	// 	https: {
+	// 		key: "./server.key",
+	// 		cert: "./server.crt",
+	// 	},
+	// },
 
 	modules: [
 		"nuxt-icon",

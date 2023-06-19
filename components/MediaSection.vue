@@ -10,112 +10,53 @@
 	/>
 
 	<div
-		class="mt-6 w-full"
-		v-if="imageMedia"
+		class="text-2xl opacity-75 font-medium mt-5"
+		v-if="medias.length != 0"
 	>
-		<div class="text-3xl mb-3">Images</div>
-
-		<div class="flex flex-col items-center w-full gap-5">
-			<component
-				v-for="media in imageMedia"
-				:is="getMediaComponent(media.type)"
-				:media="media"
-			/>
-		</div>
-	</div>
-	<div
-		class="mt-6 w-full"
-		v-if="videoMedia"
-	>
-		<div class="text-3xl mb-3">Videos</div>
-
-		<div class="flex flex-col items-center w-full gap-5">
-			<component
-				v-for="media in videoMedia"
-				:is="getMediaComponent(media.type)"
-				:media="media"
-			/>
-		</div>
-	</div>
-	<div
-		class="mt-6 w-full"
-		v-if="pdfMedia"
-	>
-		<div class="text-3xl mb-3">PDFs</div>
-
-		<div class="grid grid-cols-2 items-center gap-3 justify-center w-full">
-			<component
-				v-for="media in pdfMedia"
-				:is="getMediaComponent(media.type)"
-				:media="media"
-			/>
-		</div>
+		Your media
 	</div>
 
-	<div
-		class="mt-6 w-full"
-		v-if="instagramMedia"
+	<draggable
+		v-model="mediaStore.media"
+		:item-key="'nothing'"
+		handle=".handle"
+		ghost-class="brightness-50"
+		tag="div"
+		:component-data="{ class: 'flex flex-col w-full gap-5 mt-10' }"
+		@end="onEnd"
 	>
-		<div class="text-3xl mb-3">Instagram</div>
-
-		<div class="flex flex-col items-center w-full gap-5">
+		<template #item="{ element }">
 			<component
-				v-for="media in instagramMedia"
-				:is="getMediaComponent(media.type)"
-				:media="media"
+				:is="getComponent(element.type)"
+				:media="element"
 			/>
-		</div>
-	</div>
-	<div
-		class="mt-6 w-full"
-		v-if="facebookMedia"
-	>
-		<div class="text-3xl mb-3">Facebook</div>
-
-		<div class="flex flex-col items-center w-full gap-5">
-			<component
-				v-for="media in facebookMedia"
-				:is="getMediaComponent(media.type)"
-				:media="media"
-			/>
-		</div>
-	</div>
-	<div
-		class="mt-6 w-full"
-		v-if="youtubeMedia"
-	>
-		<div class="text-3xl mb-3">Youtube</div>
-
-		<div class="flex flex-col justify-center gap-6 w-full">
-			<component
-				v-for="media in youtubeMedia"
-				:is="getMediaComponent(media.type)"
-				:media="media"
-			/>
-		</div>
-	</div>
+		</template>
+	</draggable>
 </template>
 
 <script setup>
+	import draggable from "vuedraggable";
+
 	import Embedding from "./mediaInput/Embedding.vue";
 	import mediaTypes from "~/data/media";
 	import { useMediaStore } from "~/stores/media";
 	import { useUserStore } from "~~/stores/user";
 	import File from "~/components/mediaInput/File.vue";
 	import { storeToRefs } from "pinia";
-
 	const userStore = useUserStore();
 	const mediaStore = useMediaStore();
 
 	const { user } = storeToRefs(userStore);
-
 	const { media: medias } = storeToRefs(mediaStore);
-
 	const selectedMedia = ref(mediaTypes[0]);
 
 	onMounted(async () => {
 		await mediaStore.fetchMedia(user.value.id);
 	});
+
+	async function onEnd() {
+		await mediaStore.reorder();
+	}
 
 	const imageMedia = computed(() =>
 		medias?.value?.filter?.((media) => media.type == "image")?.length == 0
@@ -167,6 +108,9 @@
 			};
 		}
 	}
+
+	const getComponent = (type) =>
+		mediaTypes.find((media) => media.type == type).component;
 
 	const mediaInputs = {
 		file: {

@@ -1,5 +1,8 @@
 <template>
-	<Media @delete="mediaStore.deleteMedia(props.media.id)">
+	<Media
+		@delete="mediaStore.deleteMedia(props.media.id)"
+		:media="props.media"
+	>
 		<iframe
 			class="w-full"
 			height="315"

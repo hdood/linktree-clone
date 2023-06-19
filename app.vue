@@ -8,9 +8,22 @@
 
 <script setup>
 	import { useUserStore } from "~~/stores/user";
-	import { storeToRefs } from "pinia";
 
 	const userStore = useUserStore();
+
+	userStore.$onAction(
+		({
+			name, // name of the action
+			store, // store instance, same as `someStore`
+			args, // array of parameters passed to the action
+			after, // hook after the action returns or resolves
+			onError, // hook if the action throws or rejects
+		}) => {
+			after((result) => {
+				if (name != "refreshFrame") store.refreshFrame();
+			});
+		}
+	);
 	let show = ref(false);
 
 	onMounted(async () => {

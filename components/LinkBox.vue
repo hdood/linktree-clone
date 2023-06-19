@@ -7,14 +7,19 @@
 					size="35"
 					class="cursor-move"
 				/>
-				<div class="space-x-4">
+				<div class="flex gap-2 items-center">
 					<icon
 						size="40"
 						:name="link.icon"
 					/>
-					<span>
-						{{ link.url }}
-					</span>
+					<div>
+						<div>
+							{{ link.displayText }}
+						</div>
+						<div class="text-xs">
+							{{ link.name }}
+						</div>
+					</div>
 				</div>
 			</div>
 

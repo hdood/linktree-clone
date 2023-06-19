@@ -1,19 +1,29 @@
 <template>
-	<Media @delete="mediaStore.deleteFileMedia(props.media.id)">
-		<a
-			:href="data?.url"
-			target="_blank"
-			class="flex items-center gap-4"
+	<Media
+		@delete="mediaStore.deleteFileMedia(props.media.id)"
+		:media="props.media"
+	>
+		<object
+			:data="data?.url"
+			type="application/pdf"
+			width="100%"
+			height="500px"
 		>
-			<icon
-				name="bi:file-pdf-fill"
-				color="red"
-				size="30"
-			/>
-			<span>
-				{{ data?.title }}
-			</span>
-		</a>
+			<a
+				:href="data?.url"
+				target="_blank"
+				class="flex items-center gap-4 ml-8"
+			>
+				<icon
+					name="bi:file-pdf-fill"
+					color="red"
+					size="30"
+				/>
+				<span>
+					{{ data?.title }}
+				</span>
+			</a>
+		</object>
 	</Media>
 </template>
 

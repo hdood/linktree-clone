@@ -1,37 +1,51 @@
-import Instagram from "~/components/media/Instagram.vue";
+import Pdf from "~~/components/media/Pdf.vue";
+import Youtube from "~~/components/media/Youtube.vue";
+import Facebook from "~~/components/media/Facebook.vue";
+import Instagram from "~~/components/media/Instagram.vue";
+import Image from "~~/components/media/Image.vue";
+import Video from "~~/components/media/Video.vue";
 
 export default [
 	{
-		name: "pdf",
+		type: "pdf",
 		icon: "bi:file-pdf-fill",
+		name: "Pdf file",
 		input: "file",
-		uiComponent: Instagram,
+		component: Pdf,
 	},
 	{
-		name: "image",
+		type: "image",
 		icon: "material-symbols:image",
+		name: "Image",
 		input: "file",
-		uiComponent: Instagram,
+		component: Image,
 	},
 	{
-		name: "video",
+		type: "video",
 		icon: "mdi:video",
+		name: "Video",
 		input: "file",
-		uiComponent: Instagram,
+		component: Video,
 	},
 	{
-		name: "instagram",
+		type: "instagram",
 		icon: "skill-icons:instagram",
+		name: "Instagram Post",
 		input: "embedding",
+		component: Instagram,
 	},
 	{
-		name: "facebook",
+		type: "facebook",
 		icon: "logos:facebook",
+		name: "Facebook post",
 		input: "embedding",
+		component: Facebook,
 	},
 	{
-		name: "youtube",
+		type: "youtube",
 		icon: "logos:youtube-icon",
+		name: "Youtube video",
 		input: "embedding",
+		component: Youtube,
 	},
 ];

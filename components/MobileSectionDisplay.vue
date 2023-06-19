@@ -4,7 +4,7 @@
 	>
 		<!-- :src="`http://localhost:3000/${userStore.$state.name}`" -->
 		<iframe
-			:src="`/${userStore.user.name}`"
+			:src="`/${user.name}`"
 			class="rounded-lg overflow-hidden fixed top-14 h-[40rem] scale-75"
 			ref="frame"
 		></iframe>
@@ -12,8 +12,11 @@
 </template>
 
 <script setup>
+	import { storeToRefs } from "pinia";
 	import { useUserStore } from "~~/stores/user";
 	const userStore = useUserStore();
+
+	const { user } = storeToRefs(userStore);
 	const frame = ref(null);
 
 	onMounted(() => {

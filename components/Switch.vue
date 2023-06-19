@@ -1,17 +1,17 @@
 <template>
 	<div
 		@click="toggle"
-		class="h-6 px-1 rounded-md flex items-center transition-all cursor-pointer relative"
+		class="h-6 px-1 rounded-md flex items-center transition-all cursor-pointer relative -z-1"
 		:class="[
 			props.on &&
-				'bg-gradient-to-r from-indigo-500 to-indigo-700 justify-end transition-all',
+				'bg-gradient-to-r from-indigo-500 to-indigo-700  transition-all',
 			!props.on && 'bg-gray-300',
 		]"
 	>
 		<div
 			class="rounded absolute w-4 h-4 top-1/2 -translate-y-1/2 transition-all duration-200 grid place-items-center"
 			:class="[
-				props.on && '',
+				props.on && 'translate-x-full',
 				!props.on && 'bg-indigo-600 ',
 				props.on && 'bg-white',
 			]"

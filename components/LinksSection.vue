@@ -1,31 +1,32 @@
 <template>
 	<div class="w-full">
 		<div class="mx-auto pb-24 py-3">
-			<div
-				class="text-gray-500 flex justify-between px-3 w-full flex-wrap"
+			<Button
+				type="primary"
+				class="px-2 h-10 w-full flex justify-center items-center"
+				@click="showLinksModal = true"
 			>
-				<div class="flex items-center gap-5 flex-wrap">
-					<LinksCombobox
-						v-model="link"
-						placeholder="URL"
-					/>
-					<TextInput
-						class="w-[20rem]"
-						v-model:input="url"
-						placeholder="URL"
-						:error="errors?.url?.[0]"
+				<div class="flex items-center">
+					<span>Add Link</span>
+					<icon
+						size="25"
+						name="material-symbols:add"
 					/>
 				</div>
-				<Button
-					type="success"
-					class="px-2 w-20 h-10"
-					@click="addLink"
-					:loading="loading"
-				>
-					Add
-				</Button>
+			</Button>
+
+			<div
+				class="mt-4 mx-2 text-xl font-medium"
+				v-if="linksStore.all.length != 0"
+			>
+				Links:
 			</div>
-			<div class="mt-4 mx-2">Links:</div>
+			<div
+				v-else
+				class="mt-8 mx-2 text-xl font-medium w-full text-center"
+			>
+				You don't have any links
+			</div>
 
 			<draggable
 				v-model="linksStore.all"
@@ -42,6 +43,11 @@
 				</template>
 			</draggable>
 		</div>
+
+		<LinksModal
+			:show="showLinksModal"
+			@close="showLinksModal = false"
+		/>
 	</div>
 </template>
 
@@ -57,8 +63,9 @@
 	const loading = ref(false);
 	const errors = ref({});
 
+	const showLinksModal = ref(false);
+
 	async function onEnd(evt) {
-		console.log("dropped");
 		await linksStore.reorder();
 	}
 
@@ -68,9 +75,7 @@
 			errors.value = { url: ["please specify a url for this link"] };
 			return;
 		}
-
 		loading.value = true;
-
 		try {
 			const response = await linksStore.addLink(
 				link.value.name,
@@ -88,7 +93,6 @@
 		}
 		loading.value = false;
 	}
-
 	onMounted(() => {
 		linksStore.getAllLinks();
 	});

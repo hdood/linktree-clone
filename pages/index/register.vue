@@ -29,7 +29,7 @@
 					<TextInput
 						v-model:input="name"
 						placeholder="Name eg: Jhon_Doe"
-						:error="errors.name?.[0]"
+						:error="errors?.name?.[0]"
 					/>
 					<TextInput
 						v-model:input="email"
@@ -40,13 +40,13 @@
 						v-model:input="password"
 						placeholder="Password"
 						inputType="password"
-						:error="errors.password"
+						:error="errors?.password?.[0]"
 					/>
 					<TextInput
 						v-model:input="confirmPassword"
 						placeholder="Confirm Password"
 						inputType="password"
-						:error="errors?.confirmPassword"
+						:error="errors?.confirmPassword?.[0]"
 					/>
 					<div class="flex self-start">
 						<div
@@ -73,7 +73,7 @@
 
 				<div class="text-sm">
 					<RouterLink
-						to="/login"
+						to="/"
 						class="underline text-indigo-600"
 						>Login</RouterLink
 					>
@@ -107,10 +107,12 @@
 			element: document.getElementById("buttonEl"),
 			onError: () => console.error("Failed to render button"),
 			onSuccess: async (res) => {
+				loading.value = true;
 				if (await socialStore.googleRegister(res)) {
 					return useRouter().push("/admin");
 				}
-				return false;
+				loading.value = true;
+				return true;
 			},
 		});
 		renderButton();
@@ -147,8 +149,9 @@
 		}
 
 		if (password.value !== confirmPassword.value) {
-			errors.value.confirmPassword =
-				"password confirmation does not match the password";
+			errors.value.confirmPassword = [
+				"password confirmation does not match the password",
+			];
 			loading.value = false;
 
 			return false;

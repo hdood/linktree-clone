@@ -1,15 +1,15 @@
 <template>
-	<AdminLayout>
-		<iframe
-			:src="`/${userStore.$state.name}`"
-			class="w-full h-full"
-			ref="frame"
-		></iframe>
-	</AdminLayout>
+	<iframe
+		:src="`/${user.name}`"
+		class="w-full min-h-screen"
+		ref="frame"
+	></iframe>
 </template>
 
 <script setup>
+	import { storeToRefs } from "pinia";
 	import AdminLayout from "~~/layouts/AdminLayout.vue";
 	import { useUserStore } from "~~/stores/user";
 	const userStore = useUserStore();
+	const { user } = storeToRefs(userStore);
 </script>

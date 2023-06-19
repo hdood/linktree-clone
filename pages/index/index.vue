@@ -34,11 +34,13 @@
 					<TextInput
 						v-model:input="email"
 						placeholder="Email eg: test@test.com"
+						:error="errors?.email?.[0]"
 					/>
 					<TextInput
 						v-model:input="password"
 						placeholder="Password"
 						inputType="password"
+						:error="errors?.password?.[0]"
 					/>
 					<div class="flex self-start">
 						<div
@@ -93,38 +95,37 @@
 
 	const buttonEl = ref(null);
 
-	onMounted(() => {
-		console.log(buttonEl.value.children);
+	const router = useRouter();
 
+	const email = ref("");
+	const password = ref("");
+	const errors = ref({ email: "", password: "" });
+	const loading = ref(false);
+
+	onMounted(() => {
 		const renderButton = googleProvider.useRenderButton({
 			useOneTap: true,
 			element: buttonEl.value,
 			onError: () => console.error("Failed to render button"),
 			onSuccess: async (res) => {
+				loading.value = true;
 				if (await socialStore.googleLogin(res)) {
 					return useRouter().push("/admin");
 				}
-				return false;
+				loading.value = true;
+
+				return true;
 			},
 		});
-
 		renderButton();
 	});
-
-	const router = useRouter();
-
-	const email = ref("");
-	const password = ref("");
-	const errors = ref(null);
-	const loading = ref(false);
-
 	const valid = computed(() => {
 		return email.value != "" && password.value != "";
 	});
 
 	const login = async () => {
 		loading.value = true;
-		errors.value = null;
+		errors.value = { email: "", password: "" };
 
 		try {
 			await authStore.login(email.value, password.value);
@@ -133,8 +134,8 @@
 
 			router.push("/admin");
 		} catch (error) {
-			console.log(error);
-			errors.value = error.response.data.errors;
+			console.error(error);
+			errors.value = error?.response?.data?.errors;
 		}
 
 		loading.value = false;

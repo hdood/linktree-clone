@@ -7,9 +7,6 @@
 			/>
 		</div>
 		<div>
-			<div class="font-medium text-lg">
-				{{ props.title }}
-			</div>
 			<div class="text-sm">
 				<slot />
 			</div>
@@ -21,13 +18,11 @@
 	import { cva, type VariantProps } from "class-variance-authority";
 
 	const wrapper = cva(
-		[
-			"lg:w-96 w-4/5 h-20 rounded-lg shadow flex py-6 px-2 items-center gap-4",
-		],
+		["min-w-fit h-7 rounded-lg shadow flex py-6 px-2 items-center gap-4"],
 		{
 			variants: {
 				type: {
-					success: ["bg-white", "text-gray-600"],
+					success: ["text-emerald-700", " bg-emerald-200 "],
 					danger: ["bg-white", "text-red-700"],
 				},
 			},

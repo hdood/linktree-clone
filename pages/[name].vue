@@ -42,7 +42,7 @@
 				class="flex items-center rounded-full p-2 cursor-pointer"
 				:href="user.website"
 				target="_blank"
-				v-if="user.website"
+				v-if="user.website && user.visibility.website"
 			>
 				<Icon
 					name="icon-park-outline:earth"
@@ -84,8 +84,8 @@
 		<div class="mx-auto w-72 mt-4 flex flex-col gap-2">
 			<a
 				class="flex items-center gap-6"
-				v-if="user.phone_visibility && user.phone"
-				:href="`tel:+${user.countryCode + user.phone}`"
+				v-if="user?.visibility?.phone && user.phone"
+				:href="`tel:+${user.countryCode + user?.phone}`"
 			>
 				<div class="flex items-center rounded-full p-2">
 					<Icon
@@ -94,10 +94,11 @@
 					/>
 				</div>
 				<div>
-					{{ "+" + user.countryCode + " " + user.phone }}
+					{{ "+" + user.country_code + " " + user.phone }}
 				</div>
 			</a>
 			<a
+				v-if="user.email && user.visibility.email"
 				:href="`mailto:${user.email}`"
 				class="flex items-center gap-6"
 			>
@@ -113,12 +114,14 @@
 			</a>
 		</div>
 
-		<div class="flex flex-wrap gap-y-1 gap-x-5 mt-5">
+		<div
+			class="grid grid-cols-4 justify-center items-center justify-items-center place-items-center gap-y-1 mt-5 w-full"
+		>
 			<a
 				v-for="link in user.links"
 				:href="link.url"
 				target="_blank"
-				class="flex items-center flex-wrap relative border min-w-fit mx-auto bg-white mt-4 p-1 rounded-lg"
+				class="flex items-center justify-center flex-wrap relative border min-w-fit mx-auto bg-white mt-4 p-1 rounded-lg"
 			>
 				<icon
 					:name="link.icon"

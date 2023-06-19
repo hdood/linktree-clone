@@ -1,10 +1,12 @@
 <template>
-	<div class="fixed top-10 lg:right-10 right-0 flex flex-col gap-4 w-96 z-50">
+	<div
+		class="fixed top-10 lg:right-10 inset-0 max-h-fit mx-auto flex flex-col gap-4 lg:max-w-fit w-10/12 z-50"
+	>
 		<TransitionGroup
 			enter-active-class="transition-all duration-300"
 			leave-active-class="transition-all duration-300"
-			leave-to-class="scale-75 opacity-0"
-			enter-from-class="scale-75 opacity-0"
+			leave-to-class="scale-75 opacity-0 translate-y-4"
+			enter-from-class="-translate-y-4 opacity-0"
 		>
 			<Notification
 				v-for="notification in notifications"

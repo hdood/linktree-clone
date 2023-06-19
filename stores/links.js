@@ -8,13 +8,16 @@ const $axios = axios(app).provide.axios;
 class LinksStore {
 	all = ref([]);
 
-	addLink = async (name, url, icon, order) => {
+	addLink = async (name, url, icon, order, text) => {
 		await $axios.post("/api/links", {
 			name,
 			url,
 			icon,
 			order,
+			text,
 		});
+
+		useUserStore().refreshFrame();
 	};
 	getAllLinks = async () => {
 		let res = await $axios.get("/api/links");
